@@ -11,22 +11,21 @@ class StartScreen extends StatelessWidget {
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                
                     children: [
                       Text(
                         'ROBOTICS SOCIETY',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: "NexaBold"),
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold, fontFamily: "NexaBold"),
                       ),
                       Text(
                         'NIT HAMIRPUR',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,fontFamily: "NexaBold"),
+                        style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold,fontFamily: "NexaBold"),
                       ),
                       SizedBox(height: 20),
                       Image.asset('images/robotics_society_logo.png', width: 200),
                       SizedBox(height: 20),
                       Text(
                         'Inventory Manager',
-                        style: TextStyle(fontSize: 18,fontFamily: "NexaRegular"),
+                        style: TextStyle(fontSize: 22,fontFamily: "NexaRegular"),
                       ),
                     ],
                   ),

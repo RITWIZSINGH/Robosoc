@@ -12,7 +12,7 @@ class _SplashScreen1State extends State<SplashScreen1> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacementNamed(context, '/splash2');
     });
   }
@@ -22,12 +22,7 @@ class _SplashScreen1State extends State<SplashScreen1> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Container(
-          width: 2,
-          height: 2,
-          decoration:
-              BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-        ),
+        child: Image.asset('images/robotics_society_logo.png',width: 10)
       ),
     );
   }

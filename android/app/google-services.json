@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1088636233768",
+    "project_id": "robosoc-app",
+    "storage_bucket": "robosoc-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1088636233768:android:cc1669ae7a2f2879292d1d",
+        "android_client_info": {
+          "package_name": "com.example.robosoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-ex_f2MnxOT3-fwkHkwMXI04U1I8N6vg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
