@@ -15,18 +15,18 @@ class StartScreen extends StatelessWidget {
                     children: [
                       Text(
                         'ROBOTICS SOCIETY',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, fontFamily: "NexaBold"),
                       ),
                       Text(
                         'NIT HAMIRPUR',
-                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,fontFamily: "NexaBold"),
                       ),
                       SizedBox(height: 20),
                       Image.asset('images/robotics_society_logo.png', width: 200),
                       SizedBox(height: 20),
                       Text(
                         'Inventory Manager',
-                        style: TextStyle(fontSize: 18),
+                        style: TextStyle(fontSize: 18,fontFamily: "NexaRegular"),
                       ),
                     ],
                   ),
