@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 
 class SplashScreen1 extends StatefulWidget {
   const SplashScreen1({super.key});
@@ -23,8 +21,8 @@ class _SplashScreen1State extends State<SplashScreen1> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Image.asset('assets/images/robotics_society_logo.png',width: 10)
-      ),
+          child: Image.asset('assets/images/robotics_society_logo.png',
+              width: 10)),
     );
   }
 }
