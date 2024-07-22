@@ -1,9 +1,10 @@
-// ignore_for_file: use_key_in_widget_constructors, prefer_const_constructors
 
 import 'package:flutter/material.dart';
 
 
 class SplashScreen1 extends StatefulWidget {
+  const SplashScreen1({super.key});
+
   @override
   State<SplashScreen1> createState() => _SplashScreen1State();
 }
@@ -12,7 +13,7 @@ class _SplashScreen1State extends State<SplashScreen1> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacementNamed(context, '/splash2');
     });
   }
@@ -22,7 +23,7 @@ class _SplashScreen1State extends State<SplashScreen1> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
-        child: Image.asset('images/robotics_society_logo.png',width: 10)
+        child: Image.asset('assets/images/robotics_society_logo.png',width: 10)
       ),
     );
   }
