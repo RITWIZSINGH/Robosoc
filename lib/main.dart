@@ -1,6 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:robosoc/screens/login_screen.dart';
+import 'package:robosoc/screens/navigatation_screen.dart';
+import 'package:robosoc/screens/register_screen.dart';
 import 'package:robosoc/screens/splash_screen1.dart';
 import 'package:robosoc/screens/splash_screen2.dart';
 import 'package:robosoc/screens/splash_screen3.dart';
@@ -11,7 +14,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Platform.isAndroid
       ? await Firebase.initializeApp(
-        name: "robosoc-app",
+          name: "robosoc-app",
           options: const FirebaseOptions(
               apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
               appId: '1:1088636233768:web:6abf47f4ac10f300292d1d',
@@ -27,14 +30,10 @@ class RobosocApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
-      home: const SplashScreen1(),
-
+      home: const NavigatationScreen(),
       theme: ThemeData(
         primarySwatch: Colors.yellow,
       ),
-      home: SplashScreen1(),
-
       routes: {
         '/splash2': (context) => const SplashScreen2(),
         '/splash3': (context) => const SplashScreen3(),
