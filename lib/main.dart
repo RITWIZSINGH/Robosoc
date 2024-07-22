@@ -24,6 +24,16 @@ Future<void> main() async {
   runApp(const RobosocApp());
 }
 
+final kcolorScheme = ColorScheme.fromSwatch().copyWith(
+    brightness: Brightness.light,
+    primary: Colors.yellow,
+    secondary: Colors.orange,
+    surface: Colors.white,
+    onSurface: const Color.fromRGBO(183, 144, 209, 1));
+
+final theme = ThemeData()
+    .copyWith(brightness: Brightness.light, colorScheme: kcolorScheme);
+
 class RobosocApp extends StatelessWidget {
   const RobosocApp({super.key});
 
@@ -31,9 +41,7 @@ class RobosocApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: const NavigatationScreen(),
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
-      ),
+      theme: theme,
       routes: {
         '/splash2': (context) => const SplashScreen2(),
         '/splash3': (context) => const SplashScreen3(),
