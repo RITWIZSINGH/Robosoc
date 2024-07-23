@@ -12,12 +12,18 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add New Component"),
+        title: const Text(
+          "Add New Component",
+          style: TextStyle(color: Colors.black),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: const Icon(Icons.arrow_back_ios),
+          icon: const Icon(
+            Icons.arrow_back_ios,
+            color: Colors.black,
+          ),
         ),
       ),
     );
