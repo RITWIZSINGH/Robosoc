@@ -1,10 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:robosoc/screens/login_screen.dart';
+
 import 'package:robosoc/screens/navigatation_screen.dart';
-import 'package:robosoc/screens/register_screen.dart';
-import 'package:robosoc/screens/splash_screen1.dart';
+
 import 'package:robosoc/screens/splash_screen2.dart';
 import 'package:robosoc/screens/splash_screen3.dart';
 import 'package:robosoc/screens/start_screen.dart';
