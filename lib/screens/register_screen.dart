@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:robosoc/screens/navigatation_screen.dart';
 import 'package:robosoc/utilities/custom_container.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -34,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SnackBar(content: Text("Registration Successful")),
         );
         // Navigate to home screen or show success message
-        Navigator.pop(context);
+        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> NavigatationScreen()));
       } catch (e) {
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(

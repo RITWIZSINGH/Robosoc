@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:robosoc/screens/home_screen.dart';
+import 'package:robosoc/screens/navigatation_screen.dart';
 import 'package:robosoc/screens/register_screen.dart';
 import 'package:robosoc/utilities/custom_container.dart';
 
@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SnackBar(content: Text("Login Successful")),
         );
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomeScreen()));
+            context, MaterialPageRoute(builder: (context) => NavigatationScreen()));
         // Navigate to home screen or show success message
       } catch (e) {
         // Show error message

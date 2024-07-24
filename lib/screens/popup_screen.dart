@@ -2,11 +2,13 @@
 
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class PopupScreen extends StatelessWidget {
+  const PopupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('HomeScreen'));
+    return Center(
+      child: Text('popup'),
+    );
   }
 }

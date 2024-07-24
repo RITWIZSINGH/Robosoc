@@ -49,6 +49,7 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
         child: const Icon(
           Icons.add,
           color: Colors.white,
+          size: 30,
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
