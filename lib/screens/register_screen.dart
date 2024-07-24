@@ -1,11 +1,11 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, library_private_types_in_public_api, use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -18,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Passwords do not match')),
+          const SnackBar(content: Text('Passwords do not match')),
         );
         return;
       }
@@ -28,8 +28,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           password: _passwordController.text,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Registration Successful")),
-                        );
+          const SnackBar(content: Text("Registration Successful")),
+        );
         // Navigate to home screen or show success message
         Navigator.pop(context);
       } catch (e) {
@@ -47,22 +47,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.yellow,
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
+              const Text(
                 'ROBOSOC',
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              Text('Inventory Manager'),
-              SizedBox(height: 32),
+              const Text('Inventory Manager'),
+              const SizedBox(height: 32),
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                padding: EdgeInsets.all(16),
+                padding: const EdgeInsets.all(16),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -75,28 +75,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('Login'),
+                              child: const Text('Login'),
                             ),
                           ),
-                          SizedBox(width: 16),
+                          const SizedBox(width: 16),
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {},
-                              child: Text('Register'),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 foregroundColor: Colors.white,
                               ),
+                              child: const Text('Register'),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
-                      Text('Register New Member'),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
+                      const Text('Register New Member'),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _emailController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Enter email id',
                           border: OutlineInputBorder(),
                         ),
@@ -107,11 +107,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _passwordController,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Enter Password',
                           border: OutlineInputBorder(),
                         ),
@@ -122,11 +122,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       TextFormField(
                         controller: _confirmPasswordController,
                         obscureText: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: 'Confirm Password',
                           border: OutlineInputBorder(),
                         ),
@@ -137,10 +137,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           return null;
                         },
                       ),
-                      SizedBox(height: 16),
+                      const SizedBox(height: 16),
                       ElevatedButton(
                         onPressed: _register,
-                        child: Text('Register'),
+                        child: const Text('Register'),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.yellow,
                           foregroundColor: Colors.black,
