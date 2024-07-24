@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:robosoc/utilities/custom_container.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -44,114 +45,136 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.yellow,
+      backgroundColor: Color(0xffffc700),
       body: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'ROBOSOC',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              Text('Inventory Manager'),
-              SizedBox(height: 32),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                padding: EdgeInsets.all(16),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: 40),
+            Text(
+              'ROBOSOC',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,fontFamily: "NexaBold"),
+              textAlign: TextAlign.center,
+            ),
+            Text(
+              'Inventory Manager',
+              style: TextStyle(fontSize: 16,fontFamily: "NexaRegular"),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 40),
+            CustomContainer(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(25),
+                        color: Colors.grey[200],
+                      ),
+                      child: Row(
                         children: [
                           Expanded(
-                            child: ElevatedButton(
+                            child: TextButton(
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('Login'),
+                              child: Text('Login',style: TextStyle(fontFamily: "NexaBold"),),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.black,
+                              ),
                             ),
                           ),
-                          SizedBox(width: 16),
                           Expanded(
                             child: ElevatedButton(
                               onPressed: () {},
-                              child: Text('Register'),
+                              child: Text('Register',style: TextStyle(fontFamily: "NexaBold"),),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      SizedBox(height: 16),
-                      Text('Register New Member'),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter email id',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          hintText: 'Enter Password',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      TextFormField(
-                        controller: _confirmPasswordController,
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          hintText: 'Confirm Password',
-                          border: OutlineInputBorder(),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please confirm your password';
-                          }
-                          return null;
-                        },
-                      ),
-                      SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: _register,
-                        child: Text('Register'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.yellow,
-                          foregroundColor: Colors.black,
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      'Register New Member',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,fontFamily: "NexaRegular"),
+                    ),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(
+                        hintText: 'Enter email id',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                    ],
-                  ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your email';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Enter Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 15),
+                    TextFormField(
+                      controller: _confirmPasswordController,
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm Password',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please confirm your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: _register,
+                      child: Text('Register',style: TextStyle(color: Colors.white),),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.yellow,
+                        foregroundColor: Colors.black,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 15),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
