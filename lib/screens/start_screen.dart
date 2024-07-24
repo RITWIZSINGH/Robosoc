@@ -1,9 +1,9 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, use_key_in_widget_constructors
-
 import 'package:flutter/material.dart';
 import 'package:robosoc/screens/login_screen.dart';
 
 class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
+
   @override
   State<StartScreen> createState() => _StartScreenState();
 }
@@ -12,9 +12,9 @@ class _StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => LoginScreen()));
+    Future.delayed(const Duration(seconds: 3), () {
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) =>  LoginScreen()));
     });
   }
 
@@ -26,24 +26,27 @@ class _StartScreenState extends State<StartScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(
+          const Text(
             'ROBOTICS SOCIETY',
             style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 fontFamily: "NexaBold"),
           ),
-          Text(
+          const Text(
             'NIT HAMIRPUR',
             style: TextStyle(
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 fontFamily: "NexaBold"),
           ),
-          SizedBox(height: 20),
-          Image.asset('images/robotics_society_logo.png', width: 200),
-          SizedBox(height: 20),
-          Text(
+          const SizedBox(height: 20),
+          Image.asset('assets/images/robotics_society_logo.png', width: 200),
+          const SizedBox(height: 20),
+          const SizedBox(height: 20),
+          Image.asset('assets/images/robotics_society_logo.png', width: 200),
+          const SizedBox(height: 20),
+          const Text(
             'Inventory Manager',
             style: TextStyle(fontSize: 22, fontFamily: "NexaRegular"),
           ),

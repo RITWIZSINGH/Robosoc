@@ -1,12 +1,14 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, library_private_types_in_public_api, use_key_in_widget_constructors
+// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, sort_child_properties_last
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:robosoc/utilities/custom_container.dart';
 
 class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
@@ -19,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (_formKey.currentState!.validate()) {
       if (_passwordController.text != _confirmPasswordController.text) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Passwords do not match')),
+          const SnackBar(content: Text('Passwords do not match')),
         );
         return;
       }
@@ -29,8 +31,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
           password: _passwordController.text,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text("Registration Successful")),
-                        );
+          const SnackBar(content: Text("Registration Successful")),
+        );
         // Navigate to home screen or show success message
         Navigator.pop(context);
       } catch (e) {
