@@ -1,5 +1,10 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, unused_field
+
+import 'dart:typed_data';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:robosoc/models/component.dart';
+import 'package:robosoc/utilities/image_picker.dart';
 import 'package:robosoc/widgets/issued_commponent_card.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -10,13 +15,18 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  Uint8List? _image; 
+   void selectImage() async {
+    Uint8List img = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = img;
+    });
+  }
   final List<Component> _issuedComponents = [
     Component(name: "Ardunio", quantity: 5),
     Component(name: "Bread Board", quantity: 2),
     Component(name: "Jumper Wires", quantity: 10),
     Component(name: "Ardunio", quantity: 5),
-    Component(name: "Ardunio", quantity: 5),
-    Component(name: "Ardunio", quantity: 5)
   ];
   @override
   Widget build(BuildContext context) {
@@ -43,13 +53,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(
               height: 10,
             ),
-            Column(
+            Stack(
               children: [
-                const CircleAvatar(
+                _image != null ?
+                CircleAvatar(
+                          radius: 64,
+                          backgroundImage: MemoryImage(_image!),
+                        ):
+                CircleAvatar(
                   radius: 40,
                   backgroundImage:
                       AssetImage("assets/images/defaultPerson.png"),
                 ),
+                _image!= null ? SizedBox() :
+                Positioned(
+                  child: IconButton(
+                    onPressed: selectImage,
+                    icon: Icon(
+                      size: 18,
+                      Icons.add_a_photo,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                )
+              ],
+            ),
+            Column(
+              children: [
                 const Text(
                   "Babu Rao",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
