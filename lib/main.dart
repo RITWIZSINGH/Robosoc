@@ -40,13 +40,13 @@ class RobosocApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: const SplashScreen1(),
+      home: const NavigatationScreen(),
       theme: theme,
-      routes: {
-        '/splash2': (context) => const SplashScreen2(),
-        '/splash3': (context) => const SplashScreen3(),
-        '/start': (context) => const StartScreen(),
-      },
+      // routes: {
+      //   '/splash2': (context) => const SplashScreen2(),
+      //   '/splash3': (context) => const SplashScreen3(),
+      //   '/start': (context) => const StartScreen(),
+      // },
     );
   }
 }

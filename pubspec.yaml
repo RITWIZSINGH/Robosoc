@@ -71,6 +71,7 @@ flutter:
     - assets\images\defaultPerson.png
     - assets\images\defaultComponent.png
     - assets\images\robotics_society_logo.png
+    - assets\images\arduino.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

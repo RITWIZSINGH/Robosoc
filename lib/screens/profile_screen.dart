@@ -115,28 +115,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       )
-                    : SingleChildScrollView(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Text(
-                                    "Currently Issued Components",
-                                    style: TextStyle(
-                                        color: Color.fromARGB(255, 98, 98, 98),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  )),
-                              ..._issuedComponents.map((component) {
-                                return IssuedCommponentCard(
-                                    component: component);
-                              })
-                            ],
+                    : SafeArea(
+                      child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              children: [
+                                const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "Currently Issued Components",
+                                      style: TextStyle(
+                                          color: Color.fromARGB(255, 98, 98, 98),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    )),
+                                ..._issuedComponents.map((component) {
+                                  return IssuedCommponentCard(
+                                      component: component);
+                                })
+                              ],
+                            ),
                           ),
                         ),
-                      ),
+                    ),
               ],
             )
           ],

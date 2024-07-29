@@ -14,12 +14,12 @@ class NavigatationScreen extends StatefulWidget {
 
 class _NavigatationScreenState extends State<NavigatationScreen> {
   int currentIndex = 0;
-  Widget _currentPage = const HomePage();
+  Widget _currentPage =  HomePage();
 
   void changePage(int index) {
     setState(() {
       if (index == 0) {
-        _currentPage = const HomePage();
+        _currentPage =  HomePage();
       } else if (index == 1) {
         _currentPage = const ProjectsPage();
       } else if (index == 3) {

@@ -1,5 +1,8 @@
+// ignore_for_file: prefer_const_constructors, unused_import
+
 import 'package:flutter/material.dart';
 import 'package:robosoc/screens/login_screen.dart';
+import 'package:robosoc/screens/navigatation_screen.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -14,7 +17,7 @@ class _StartScreenState extends State<StartScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) =>  LoginScreen()));
+          MaterialPageRoute(builder: (context) =>  NavigatationScreen()));
     });
   }
 
