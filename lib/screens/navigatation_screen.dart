@@ -14,17 +14,17 @@ class NavigatationScreen extends StatefulWidget {
 
 class _NavigatationScreenState extends State<NavigatationScreen> {
   int currentIndex = 0;
-  Widget _currentPage =  HomePage();
+  Widget _currentPage = HomePage();
 
   void changePage(int index) {
     setState(() {
       if (index == 0) {
-        _currentPage =  HomePage();
+        _currentPage = HomePage();
       } else if (index == 1) {
         _currentPage = const ProjectsPage();
-      } else if (index == 3) {
+      } else if (index == 2) {
         _currentPage = const IssueHistory();
-      } else if (index == 4) {
+      } else if (index == 3) {
         _currentPage = const MOMPage();
       }
     });
@@ -66,12 +66,6 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
               icon: Icon(Icons.home_outlined), label: "Home"),
           BottomNavigationBarItem(
               icon: Icon(Icons.hardware_outlined), label: "Projects"),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.arrow_back,
-                size: 0,
-              ),
-              label: ""),
           BottomNavigationBarItem(
               icon: Icon(Icons.history_outlined), label: "Issue History"),
           BottomNavigationBarItem(
