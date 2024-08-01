@@ -2,10 +2,10 @@
 // ignore_for_file: unused_import
 
 import 'package:flutter/material.dart';
-
+import 'package:robosoc/utilities/component_provider.dart';
 import 'package:robosoc/screens/navigatation_screen.dart';
 import 'package:robosoc/screens/splash_screen1.dart';
-
+import 'package:provider/provider.dart';
 import 'package:robosoc/screens/splash_screen2.dart';
 import 'package:robosoc/screens/splash_screen3.dart';
 import 'package:robosoc/screens/start_screen.dart';
@@ -39,14 +39,17 @@ class RobosocApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const NavigatationScreen(),
-      theme: theme,
-      // routes: {
-      //   '/splash2': (context) => const SplashScreen2(),
-      //   '/splash3': (context) => const SplashScreen3(),
-      //   '/start': (context) => const StartScreen(),
-      // },
+    return ChangeNotifierProvider(
+      create: (context) => ComponentProvider(),
+      child: MaterialApp(
+        home: const NavigatationScreen(),
+        theme: theme,
+        // routes: {
+        //   '/splash2': (context) => const SplashScreen2(),
+        //   '/splash3': (context) => const SplashScreen3(),
+        //   '/start': (context) => const StartScreen(),
+        // },
+      ),
     );
   }
 }
