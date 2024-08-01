@@ -43,6 +43,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   image_picker: ^1.1.2
   firebase_storage: ^12.1.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +72,7 @@ flutter:
     - assets\images\defaultPerson.png
     - assets\images\defaultComponent.png
     - assets\images\robotics_society_logo.png
+    - assets\images\arduino.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
