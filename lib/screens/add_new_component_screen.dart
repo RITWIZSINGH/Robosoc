@@ -1,6 +1,7 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, avoid_unnecessary_containers
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, avoid_unnecessary_containers, avoid_print, unused_import
 
 import 'package:flutter/material.dart';
+import 'package:robosoc/pages/home_page.dart';
 
 class AddNewComponentScreen extends StatefulWidget {
   const AddNewComponentScreen({super.key});
@@ -11,7 +12,9 @@ class AddNewComponentScreen extends StatefulWidget {
 
 class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
   final _formKey = GlobalKey<FormState>();
-
+  late String componentName;
+  late String quantity;
+  late String description;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,21 +68,33 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                           color: Colors.yellow,
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(Icons.edit, size: 20,color: Colors.white,),
+                        child: Icon(
+                          Icons.edit,
+                          size: 20,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 24),
+              //Enter Component Name
               TextFormField(
+                onChanged: (value){
+                  componentName = value;
+                },
                 decoration: InputDecoration(
                   labelText: 'Enter Component Name',
                   border: OutlineInputBorder(),
                 ),
               ),
               SizedBox(height: 16),
+              //Quantity TextField
               TextFormField(
+                onChanged: (value){
+                  quantity = value;
+                },
                 decoration: InputDecoration(
                   labelText: 'Quantity',
                   border: OutlineInputBorder(),
@@ -87,15 +102,19 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 16),
+              //Description TextField
               TextFormField(
+                onChanged: (value){
+                  description = value;
+                },
                 decoration: InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
-                maxLines: 3,
+                maxLines: 5,
               ),
               SizedBox(height: 24),
-              ElevatedButton(
+              TextButton(
                 child: Text('Save'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,
@@ -105,6 +124,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
                     // TODO: Implement save functionality
+                    Navigator.pop(context);
                   }
                 },
               ),
