@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:robosoc/utilities/component_model.dart';
@@ -11,9 +13,7 @@ class ComponentProvider with ChangeNotifier {
   Future<void> loadComponents() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('components').get();
-      _components = querySnapshot.docs
-          .map((doc) => Component.fromMap(doc.data() as Map<String, dynamic>, doc.id))
-          .toList();
+      _components = querySnapshot.docs.map((doc) => Component.fromMap(doc.data() as Map<String, dynamic>, doc.id)).toList();
       notifyListeners();
     } catch (e) {
       print("Error loading components: $e");

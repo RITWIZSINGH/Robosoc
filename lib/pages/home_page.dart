@@ -16,6 +16,14 @@ class _HomePageState extends State<HomePage> {
 
   double screenWidth = 0;
 
+    @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ComponentProvider>(context, listen: false).loadComponents();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
