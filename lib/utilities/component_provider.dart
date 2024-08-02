@@ -1,22 +1,33 @@
-// ignore_for_file: prefer_final_fields
-
 import 'package:flutter/foundation.dart';
-
-class Component {
-  final String name;
-  final int quantity;
-  final String description;
-
-  Component({required this.name, required this.quantity, required this.description});
-}
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:robosoc/utilities/component_model.dart';
 
 class ComponentProvider with ChangeNotifier {
   List<Component> _components = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   List<Component> get components => _components;
 
-  void addComponent(Component component) {
-    _components.add(component);
-    notifyListeners();
+  Future<void> loadComponents() async {
+    try {
+      QuerySnapshot querySnapshot = await _firestore.collection('components').get();
+      _components = querySnapshot.docs
+          .map((doc) => Component.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+          .toList();
+      notifyListeners();
+    } catch (e) {
+      print("Error loading components: $e");
+    }
+  }
+
+  Future<void> addComponent(Component component) async {
+    try {
+      DocumentReference docRef = await _firestore.collection('components').add(component.toMap());
+      component.id = docRef.id;
+      _components.add(component);
+      notifyListeners();
+    } catch (e) {
+      print("Error adding component: $e");
+    }
   }
 }
