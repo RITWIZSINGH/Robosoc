@@ -1,6 +1,8 @@
-
 import 'package:flutter/material.dart';
 
+import 'package:robosoc/utilities/component_provider.dart';
+import 'package:provider/provider.dart';
+import 'package:robosoc/utilities/component_model.dart';
 
 class AddNewComponentScreen extends StatefulWidget {
   const AddNewComponentScreen({super.key});
@@ -80,7 +82,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
               SizedBox(height: 24),
               //Enter Component Name
               TextFormField(
-                onChanged: (value){
+                onChanged: (value) {
                   componentName = value;
                 },
                 decoration: InputDecoration(
@@ -91,7 +93,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
               SizedBox(height: 16),
               //Quantity TextField
               TextFormField(
-                onChanged: (value){
+                onChanged: (value) {
                   quantity = value;
                 },
                 decoration: InputDecoration(
@@ -103,7 +105,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
               SizedBox(height: 16),
               //Description TextField
               TextFormField(
-                onChanged: (value){
+                onChanged: (value) {
                   description = value;
                 },
                 decoration: InputDecoration(
@@ -120,9 +122,14 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                   backgroundColor: Colors.yellow,
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (_formKey.currentState!.validate()) {
-                    // TODO: Implement save functionality
+                    final component = Component(
+                        name: componentName,
+                        quantity: int.parse(quantity),
+                        description: description);
+                    await Provider.of<ComponentProvider>(context, listen: false)
+                        .addComponent(component);
                     Navigator.pop(context);
                   }
                 },

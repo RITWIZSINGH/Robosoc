@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:robosoc/screens/navigatation_screen.dart';
+import 'package:robosoc/utilities/component_provider.dart';
+
+import 'package:provider/provider.dart';
+
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
@@ -31,14 +36,17 @@ class RobosocApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const NavigatationScreen(),
-      theme: theme,
-      // routes: {
-      //   '/splash2': (context) => const SplashScreen2(),
-      //   '/splash3': (context) => const SplashScreen3(),
-      //   '/start': (context) => const StartScreen(),
-      // },
+    return ChangeNotifierProvider(
+      create: (context) => ComponentProvider(),
+      child: MaterialApp(
+        home: const NavigatationScreen(),
+        theme: theme,
+        // routes: {
+        //   '/splash2': (context) => const SplashScreen2(),
+        //   '/splash3': (context) => const SplashScreen3(),
+        //   '/start': (context) => const StartScreen(),
+        // },
+      ),
     );
   }
 }
