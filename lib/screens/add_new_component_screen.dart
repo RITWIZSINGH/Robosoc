@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, avoid_unnecessary_containers, avoid_print, unused_import
 
 import 'package:flutter/material.dart';
-import 'package:robosoc/pages/home_page.dart';
+
 
 class AddNewComponentScreen extends StatefulWidget {
   const AddNewComponentScreen({super.key});

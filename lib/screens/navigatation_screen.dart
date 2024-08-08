@@ -4,6 +4,7 @@ import 'package:robosoc/pages/issue_history.dart';
 import 'package:robosoc/pages/mom_page.dart';
 import 'package:robosoc/pages/projects_page.dart';
 import 'package:robosoc/screens/add_new_component_screen.dart';
+import 'package:robosoc/screens/new_mom.dart';
 
 class NavigatationScreen extends StatefulWidget {
   const NavigatationScreen({super.key});
@@ -39,11 +40,19 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
         elevation: 12,
         shape: const StadiumBorder(),
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AddNewComponentScreen(),
-              ));
+          if (currentIndex == 0) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddNewComponentScreen(),
+                ));
+          } else if (currentIndex == 4) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewMomScreen(),
+                ));
+          }
         },
         backgroundColor: Colors.black,
         child: const Icon(

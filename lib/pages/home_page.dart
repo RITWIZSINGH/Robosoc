@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/screens/profile_screen.dart';
+import 'package:robosoc/widgets/user_image.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -45,17 +46,8 @@ class _HomePageState extends State<HomePage> {
                       MaterialPageRoute(
                           builder: (context) => const ProfileScreen()));
                 },
-                child: Container(
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Theme.of(context).colorScheme.secondary,
-                          width: 3),
-                      borderRadius: BorderRadius.circular(100)),
-                  child: const CircleAvatar(
-                    radius: 25,
-                    backgroundImage:
-                        AssetImage("assets/images/defaultPerson.png"),
-                  ),
+                child: UserImage(
+    imagePath: "assets/images/defaultPerson.png",
                 ),
               )
             ],

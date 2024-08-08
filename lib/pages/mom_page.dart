@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:robosoc/widgets/mom_card.dart';
 
 class MOMPage extends StatelessWidget {
@@ -33,26 +32,19 @@ class MOMPage extends StatelessWidget {
                   fontSize: 100,
                   fontWeight: FontWeight.w500),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  "MEET",
+                  "MEET\nINGS",
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.secondary,
                       fontSize: 30,
                       fontWeight: FontWeight.bold),
                 ),
-                Text(
-                  "INGS",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold),
-                )
               ],
             )
           ],
