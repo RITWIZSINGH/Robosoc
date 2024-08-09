@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 
 import 'package:robosoc/utilities/component_provider.dart';

@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, no_leading_underscores_for_local_identifiers
+
 import 'package:image_picker/image_picker.dart';
 
 pickImage(ImageSource source) async {
