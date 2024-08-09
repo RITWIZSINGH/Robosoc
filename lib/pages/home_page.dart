@@ -1,12 +1,13 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, avoid_unnecessary_containers, unnecessary_import, use_key_in_widget_constructors, sized_box_for_whitespace, unused_import
-
 import 'package:flutter/material.dart';
 import 'package:robosoc/screens/profile_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/component_provider.dart';
+import 'package:robosoc/widgets/user_image.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -16,7 +17,7 @@ class _HomePageState extends State<HomePage> {
 
   double screenWidth = 0;
 
-    @override
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,9 +39,9 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
                       Text(
                         "Hi!",
                         style: TextStyle(fontSize: 16),
@@ -59,10 +60,8 @@ class _HomePageState extends State<HomePage> {
                           MaterialPageRoute(
                               builder: (context) => const ProfileScreen()));
                     },
-                    child: Container(
-                      height: screenHeight / 8,
-                      width: screenWidth / 6,
-                      child: Image.asset("assets/images/defaultPerson.png"),
+                    child: const UserImage(
+                      imagePath: "assets/images/defaultPerson.png",
                     ),
                   )
                 ],
@@ -73,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search Component',
-                  prefixIcon: Icon(Icons.search),
+                  prefixIcon: const Icon(Icons.search),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -84,8 +83,8 @@ class _HomePageState extends State<HomePage> {
               child: Consumer<ComponentProvider>(
                   builder: (context, componentProvider, child) {
                 return GridView.builder(
-                  padding: EdgeInsets.all(16),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 16,
                     mainAxisSpacing: 16,
@@ -99,17 +98,19 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset('assets/images/arduino.png', height: 80),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           //Component Name
                           Text(
                             component.name,
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold,),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                           //Quantity
                           Text(
                             '${component.quantity}',
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontWeight: FontWeight.w500,
                               fontSize: 18,
                               color: Color.fromARGB(255, 189, 0, 196),
@@ -118,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                           //Description
                           Text(
                             component.description,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Color.fromARGB(255, 224, 75, 11),
                             ),

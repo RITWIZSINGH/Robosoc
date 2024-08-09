@@ -1,7 +1,5 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, avoid_unnecessary_containers, avoid_print, unused_import, unused_local_variable, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
-import 'package:robosoc/pages/home_page.dart';
+
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/component_model.dart';
@@ -130,7 +128,8 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                         name: componentName,
                         quantity: int.parse(quantity),
                         description: description);
-                    await Provider.of<ComponentProvider>(context, listen: false).addComponent(component);
+                    await Provider.of<ComponentProvider>(context, listen: false)
+                        .addComponent(component);
                     Navigator.pop(context);
                   }
                 },
