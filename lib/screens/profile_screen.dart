@@ -16,25 +16,26 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  Uint8List? _image; 
+  Uint8List? _image;
   TextEditingController nameController = TextEditingController();
   TextEditingController roleController = TextEditingController();
-  //selectImage 
-   void selectImage() async {
+  //selectImage
+  void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
       _image = img;
     });
   }
-  
-  //Saving data 
-  void saveProfile() async{
 
-      String name = nameController.text;
-      String role = roleController.text;
+  //Saving data
+  void saveProfile() async {
+    String name = nameController.text;
+    String role = roleController.text;
 
-      String resp = await StoreData().saveData(name: name, role: role, file: _image!);
+    String resp =
+        await StoreData().saveData(name: name, role: role, file: _image!);
   }
+
   final List<Component> _issuedComponents = [
     Component(name: "Ardunio", quantity: 5),
     Component(name: "Bread Board", quantity: 2),
@@ -68,27 +69,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             Stack(
               children: [
-                _image != null ?
-                CircleAvatar(
-                          radius: 64,
+                _image != null
+                    ? Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).colorScheme.secondary,
+                                width: 3),
+                            borderRadius: BorderRadius.circular(100)),
+                        child: CircleAvatar(
+                          radius: 30,
                           backgroundImage: MemoryImage(_image!),
-                        ):
-                CircleAvatar(
-                  radius: 40,
-                  backgroundImage:
-                      AssetImage("assets/images/defaultPerson.png"),
-                ),
-                _image!= null ? SizedBox() :
-                Positioned(
-                  child: IconButton(
-                    onPressed: selectImage,
-                    icon: Icon(
-                      size: 18,
-                      Icons.add_a_photo,
-                      color: Theme.of(context).colorScheme.secondary,
-                    ),
-                  ),
-                )
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                                color: Theme.of(context).colorScheme.secondary,
+                                width: 3),
+                            borderRadius: BorderRadius.circular(100)),
+                        child: const CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                              AssetImage("assets/images/defaultPerson.png"),
+                        ),
+                      ),
+                _image != null
+                    ? SizedBox()
+                    : Positioned(
+                        child: IconButton(
+                          onPressed: selectImage,
+                          icon: Icon(
+                            size: 18,
+                            Icons.add_a_photo,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      )
               ],
             ),
             Column(
@@ -116,7 +132,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       )
                     : SafeArea(
-                      child: SingleChildScrollView(
+                        child: SingleChildScrollView(
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
@@ -126,7 +142,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     child: Text(
                                       "Currently Issued Components",
                                       style: TextStyle(
-                                          color: Color.fromARGB(255, 98, 98, 98),
+                                          color:
+                                              Color.fromARGB(255, 98, 98, 98),
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18),
                                     )),
@@ -138,7 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ),
                         ),
-                    ),
+                      ),
               ],
             )
           ],

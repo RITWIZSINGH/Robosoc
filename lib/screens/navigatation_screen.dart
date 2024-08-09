@@ -4,6 +4,7 @@ import 'package:robosoc/pages/issue_history.dart';
 import 'package:robosoc/pages/mom_page.dart';
 import 'package:robosoc/pages/projects_page.dart';
 import 'package:robosoc/screens/add_new_component_screen.dart';
+import 'package:robosoc/screens/new_mom.dart';
 
 class NavigatationScreen extends StatefulWidget {
   const NavigatationScreen({super.key});
@@ -22,9 +23,9 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
         _currentPage = HomePage();
       } else if (index == 1) {
         _currentPage = const ProjectsPage();
-      } else if (index == 2) {
-        _currentPage = const IssueHistory();
       } else if (index == 3) {
+        _currentPage = const IssueHistory();
+      } else if (index == 4) {
         _currentPage = const MOMPage();
       }
     });
@@ -33,17 +34,25 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _currentPage,
+      body: SafeArea(child: _currentPage),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         elevation: 12,
         shape: const StadiumBorder(),
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const AddNewComponentScreen(),
-              ));
+          if (currentIndex == 0) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AddNewComponentScreen(),
+                ));
+          } else if (currentIndex == 4) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewMomScreen(),
+                ));
+          }
         },
         backgroundColor: Colors.black,
         child: const Icon(
@@ -66,6 +75,8 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
               icon: Icon(Icons.home_outlined), label: "Home"),
           BottomNavigationBarItem(
               icon: Icon(Icons.hardware_outlined), label: "Projects"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.hardware_outlined, size: 0), label: ""),
           BottomNavigationBarItem(
               icon: Icon(Icons.history_outlined), label: "Issue History"),
           BottomNavigationBarItem(
