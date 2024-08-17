@@ -5,6 +5,7 @@ import 'package:robosoc/pages/mom_page.dart';
 import 'package:robosoc/pages/projects_page.dart';
 import 'package:robosoc/screens/add_new_component_screen.dart';
 import 'package:robosoc/screens/new_mom.dart';
+import 'package:robosoc/screens/new_project_screen.dart';
 
 class NavigatationScreen extends StatefulWidget {
   const NavigatationScreen({super.key});
@@ -22,11 +23,11 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
       if (index == 0) {
         _currentPage = HomePage();
       } else if (index == 1) {
-        _currentPage = const ProjectsPage();
+        _currentPage = ProjectsPage();
       } else if (index == 3) {
-        _currentPage = const IssueHistory();
+        _currentPage = IssueHistory();
       } else if (index == 4) {
-        _currentPage = const MOMPage();
+        _currentPage = MOMPage();
       }
     });
   }
@@ -52,6 +53,12 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
                 MaterialPageRoute(
                   builder: (context) => const NewMomScreen(),
                 ));
+          } else if (currentIndex == 1) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewProjectScreen(),
+                ));
           }
         },
         backgroundColor: Colors.black,
@@ -75,8 +82,6 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
               icon: Icon(Icons.home_outlined), label: "Home"),
           BottomNavigationBarItem(
               icon: Icon(Icons.hardware_outlined), label: "Projects"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.hardware_outlined, size: 0), label: ""),
           BottomNavigationBarItem(
               icon: Icon(Icons.history_outlined), label: "Issue History"),
           BottomNavigationBarItem(
