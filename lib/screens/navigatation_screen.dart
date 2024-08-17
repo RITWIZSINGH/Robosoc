@@ -57,7 +57,7 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NewProjectScreen(),
+                  builder: (context) =>  NewProjectScreen(),
                 ));
           }
         },
