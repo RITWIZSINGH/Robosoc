@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
           SnackBar(content: Text("Login Successful")),
         );
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => NavigatationScreen()));
+            context, MaterialPageRoute(builder: (context) => NavigationScreen()));
         // Navigate to home screen or show success message
       } catch (e) {
         // Show error message

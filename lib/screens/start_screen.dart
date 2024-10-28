@@ -17,7 +17,7 @@ class _StartScreenState extends State<StartScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) =>  NavigatationScreen()));
+          MaterialPageRoute(builder: (context) =>  NavigationScreen()));
     });
   }
 

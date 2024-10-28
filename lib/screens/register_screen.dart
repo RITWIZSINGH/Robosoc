@@ -35,7 +35,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SnackBar(content: Text("Registration Successful")),
         );
         // Navigate to home screen or show success message
-        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> NavigatationScreen()));
+        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> NavigationScreen()));
       } catch (e) {
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(

@@ -7,35 +7,32 @@ import 'package:robosoc/screens/add_new_component_screen.dart';
 import 'package:robosoc/screens/new_mom.dart';
 import 'package:robosoc/screens/new_project_screen.dart';
 
-class NavigatationScreen extends StatefulWidget {
-  const NavigatationScreen({super.key});
+class NavigationScreen extends StatefulWidget {
+  const NavigationScreen({super.key});
 
   @override
-  State<NavigatationScreen> createState() => _NavigatationScreenState();
+  State<NavigationScreen> createState() => _NavigationScreenState();
 }
 
-class _NavigatationScreenState extends State<NavigatationScreen> {
+class _NavigationScreenState extends State<NavigationScreen> {
   int currentIndex = 0;
-  Widget _currentPage = HomePage();
+  final List<Widget> pages = [
+    HomePage(),
+    ProjectsPage(),
+    IssueHistory(),
+    MOMPage(),
+  ];
 
   void changePage(int index) {
     setState(() {
-      if (index == 0) {
-        _currentPage = HomePage();
-      } else if (index == 1) {
-        _currentPage = ProjectsPage();
-      } else if (index == 3) {
-        _currentPage = IssueHistory();
-      } else if (index == 4) {
-        _currentPage = MOMPage();
-      }
+      currentIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: _currentPage),
+      body: SafeArea(child: pages[currentIndex]),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         elevation: 12,
@@ -43,22 +40,25 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
         onPressed: () {
           if (currentIndex == 0) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const AddNewComponentScreen(),
-                ));
-          } else if (currentIndex == 4) {
+              context,
+              MaterialPageRoute(
+                builder: (context) => const AddNewComponentScreen(),
+              ),
+            );
+          } else if (currentIndex == 3) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const NewMomScreen(),
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => const NewMomScreen(),
+              ),
+            );
           } else if (currentIndex == 1) {
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) =>  NewProjectScreen(),
-                ));
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewProjectScreen(),
+              ),
+            );
           }
         },
         backgroundColor: Colors.black,
@@ -70,22 +70,27 @@ class _NavigatationScreenState extends State<NavigatationScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentIndex,
-        onTap: (int value) {
-          changePage(value);
-          currentIndex = value;
-        },
+        onTap: changePage,
         iconSize: 35,
         selectedItemColor: Theme.of(context).colorScheme.secondary,
         unselectedItemColor: const Color.fromARGB(255, 135, 134, 134),
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: "Home"),
+            icon: Icon(Icons.home_outlined),
+            label: "Home",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.hardware_outlined), label: "Projects"),
+            icon: Icon(Icons.hardware_outlined),
+            label: "Projects",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.history_outlined), label: "Issue History"),
+            icon: Icon(Icons.history_outlined),
+            label: "Issue History",
+          ),
           BottomNavigationBarItem(
-              icon: Icon(Icons.document_scanner_outlined), label: "MOM"),
+            icon: Icon(Icons.document_scanner_outlined),
+            label: "MOM",
+          ),
         ],
       ),
     );

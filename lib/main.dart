@@ -41,7 +41,7 @@ class RobosocApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ComponentProvider(),
       child: MaterialApp(
-        home: const NavigatationScreen(),
+        home: const NavigationScreen(),
         theme: theme,
         // Uncomment the routes if needed
         // routes: {
