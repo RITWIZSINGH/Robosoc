@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:robosoc/screens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,6 +34,7 @@ final theme = ThemeData().copyWith(
 );
 
 class RobosocApp extends StatelessWidget {
+  
   const RobosocApp({super.key});
 
   @override
