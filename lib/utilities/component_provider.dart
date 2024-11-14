@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:robosoc/models/component_structure.dart';
+import 'package:robosoc/models/component_model.dart';
 
 class ComponentProvider with ChangeNotifier {
   List<Component> _components = [];
