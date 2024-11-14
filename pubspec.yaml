@@ -44,11 +44,8 @@ dependencies:
   image_picker: ^1.1.2
   firebase_storage: ^12.1.1
   provider: ^6.1.2
-<<<<<<< HEAD
   intl: ^0.19.0
-=======
   cached_network_image: ^3.4.1
->>>>>>> 1ff26cfcc591ccfb23d45351983406d3e12095f1
 
 dev_dependencies:
   flutter_test:
