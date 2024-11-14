@@ -3,8 +3,15 @@ class Project {
   final String title;
   final String description;
   final String link;
+  final String imageUrl;
 
-  Project({required this.id, required this.title, required this.description, required this.link});
+  Project({
+    required this.id, 
+    required this.title, 
+    required this.description, 
+    required this.link,
+    this.imageUrl = '',
+  });
 
   factory Project.fromMap(Map<String, dynamic> map, String id) {
     return Project(
@@ -12,6 +19,7 @@ class Project {
       title: map['title'] ?? '',
       description: map['description'] ?? '',
       link: map['link'] ?? '',
+      imageUrl: map['imageUrl'] ?? '',
     );
   }
 
@@ -20,6 +28,7 @@ class Project {
       'title': title,
       'description': description,
       'link': link,
+      'imageUrl': imageUrl,
     };
   }
 }

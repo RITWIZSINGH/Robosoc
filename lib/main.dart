@@ -3,6 +3,7 @@ import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:robosoc/utilities/project_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,9 +12,12 @@ Future<void> main() async {
     name: "robosoc-app",
     options: const FirebaseOptions(
       apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
-      appId: '1:1088636233768:web:6abf47f4ac10f300292d1d',
-      messagingSenderId: "1088636233768",
+      authDomain: "robosoc-app.firebaseapp.com",
       projectId: "robosoc-app",
+      storageBucket: "robosoc-app.appspot.com",
+      messagingSenderId: "1088636233768",
+      appId: "1:1088636233768:web:6abf47f4ac10f300292d1d",
+      measurementId: "G-413P5KJ4C3",
     ),
   );
 
@@ -39,17 +43,15 @@ class RobosocApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ComponentProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ComponentProvider()),
+        ChangeNotifierProvider(create: (context) => ProjectProvider()),
+      ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: const NavigationScreen(),
         theme: theme,
-        // Uncomment the routes if needed
-        // routes: {
-        //   '/splash2': (context) => const SplashScreen2(),
-        //   '/splash3': (context) => const SplashScreen3(),
-        //   '/start': (context) => const StartScreen(),
-        // },
       ),
     );
   }
