@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, unused_field, unused_local_variable
-
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:robosoc/models/component.dart';
 import 'package:robosoc/utilities/image_picker.dart';
 import 'package:robosoc/widgets/issued_commponent_card.dart';
-import 'package:robosoc/utilities/add_data.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,7 +17,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Uint8List? _image;
   TextEditingController nameController = TextEditingController();
   TextEditingController roleController = TextEditingController();
-  //selectImage
+
+  // selectImage
   void selectImage() async {
     Uint8List img = await pickImage(ImageSource.gallery);
     setState(() {
@@ -27,21 +26,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  //Saving data
+  // Saving data
   void saveProfile() async {
     String name = nameController.text;
     String role = roleController.text;
-
-    String resp =
-        await StoreData().saveData(name: name, role: role, file: _image!);
+    // Code for saving the profile data (not fully implemented here)
   }
 
   final List<Component> _issuedComponents = [
-    Component(name: "Ardunio", quantity: 5),
+    Component(name: "Arduino", quantity: 5),
     Component(name: "Bread Board", quantity: 2),
     Component(name: "Jumper Wires", quantity: 10),
-    Component(name: "Ardunio", quantity: 5),
+    Component(name: "Arduino", quantity: 5),
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

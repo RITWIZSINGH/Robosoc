@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:robosoc/utilities/component_model.dart';
+import 'package:robosoc/models/component_structure.dart';
 
 class AddNewComponentScreen extends StatefulWidget {
   const AddNewComponentScreen({super.key});

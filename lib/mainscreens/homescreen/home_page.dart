@@ -1,7 +1,7 @@
 // ignore_for_file: unnecessary_import
 
 import 'package:flutter/material.dart';
-import 'package:robosoc/screens/profile_screen.dart';
+import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/component_provider.dart';

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/models/component.dart';
 
+//this is also for profile page
 class IssuedCommponentCard extends StatelessWidget {
   const IssuedCommponentCard({super.key, required this.component});
   final Component component;

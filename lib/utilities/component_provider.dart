@@ -2,7 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:robosoc/utilities/component_model.dart';
+import 'package:robosoc/models/component_structure.dart';
 
 class ComponentProvider with ChangeNotifier {
   List<Component> _components = [];
@@ -10,6 +10,7 @@ class ComponentProvider with ChangeNotifier {
 
   List<Component> get components => _components;
 
+// function to load all the components stored in the database when the app is opened
   Future<void> loadComponents() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('components').get();
@@ -20,6 +21,7 @@ class ComponentProvider with ChangeNotifier {
     }
   }
 
+//function to add a new component into the database
   Future<void> addComponent(Component component) async {
     try {
       DocumentReference docRef = await _firestore.collection('components').add(component.toMap());

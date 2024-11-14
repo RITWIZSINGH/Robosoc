@@ -1,7 +1,9 @@
+// ignore_for_file: use_key_in_widget_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/project_provider.dart';
-import 'package:robosoc/screens/new_project_screen.dart';
+import 'package:robosoc/mainscreens/projects_screen/new_project_screen.dart';
 
 class ProjectsPage extends StatelessWidget {
   @override

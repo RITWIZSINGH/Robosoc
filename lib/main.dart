@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:robosoc/screens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -34,6 +34,7 @@ final theme = ThemeData().copyWith(
 );
 
 class RobosocApp extends StatelessWidget {
+  
   const RobosocApp({super.key});
 
   @override
@@ -41,7 +42,7 @@ class RobosocApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => ComponentProvider(),
       child: MaterialApp(
-        home: const NavigatationScreen(),
+        home: const NavigationScreen(),
         theme: theme,
         // Uncomment the routes if needed
         // routes: {

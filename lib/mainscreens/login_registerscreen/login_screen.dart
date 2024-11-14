@@ -1,45 +1,38 @@
-// ignore_for_file: use_build_context_synchronously, prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, library_private_types_in_public_api, use_key_in_widget_constructors
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:robosoc/screens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/login_registerscreen/register_screen.dart';
 import 'package:robosoc/utilities/custom_container.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
-
+class LoginScreen extends StatefulWidget {
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
 
-  void _register() async {
+  void _login() async {
     if (_formKey.currentState!.validate()) {
-      if (_passwordController.text != _confirmPasswordController.text) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Passwords do not match')),
-        );
-        return;
-      }
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Registration Successful")),
+          SnackBar(content: Text("Login Successful")),
         );
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => NavigationScreen()));
         // Navigate to home screen or show success message
-        Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> NavigatationScreen()));
       } catch (e) {
         // Show error message
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Registration failed: ${e.toString()}')),
+          SnackBar(content: Text('Login failed: ${e.toString()}')),
         );
       }
     }
@@ -56,12 +49,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
             SizedBox(height: 40),
             Text(
               'ROBOSOC',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold,fontFamily: "NexaBold"),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             Text(
               'Inventory Manager',
-              style: TextStyle(fontSize: 16,fontFamily: "NexaRegular"),
+              style: TextStyle(fontSize: 16),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 40),
@@ -79,20 +72,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text('Login',style: TextStyle(fontFamily: "NexaBold"),),
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.black,
-                              ),
-                            ),
-                          ),
-                          Expanded(
                             child: ElevatedButton(
                               onPressed: () {},
-                              child: Text('Register',style: TextStyle(fontFamily: "NexaBold"),),
+                              child: Text('Login',style: TextStyle(fontFamily: "NexaBold"),),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 foregroundColor: Colors.white,
@@ -102,13 +84,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               ),
                             ),
                           ),
+                          Expanded(
+                            child: TextButton(
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => RegisterScreen()),
+                                );
+                              },
+                              child: Text('Register',style: TextStyle(fontFamily: "NexaBold"),),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.black,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
                     SizedBox(height: 20),
                     Text(
-                      'Register New Member',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold,fontFamily: "NexaRegular"),
+                      'Login With Email',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 20),
                     TextFormField(
@@ -143,27 +139,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 15),
-                    TextFormField(
-                      controller: _confirmPasswordController,
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: 'Confirm Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 10),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: () {
+                          // Implement forgot password functionality
+                        },
+                        child: Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: Colors.blue),
                         ),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please confirm your password';
-                        }
-                        return null;
-                      },
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: _register,
-                      child: Text('Register',style: TextStyle(color: Colors.white),),
+                      onPressed: _login,
+                      child: Text('Login'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow,
                         foregroundColor: Colors.black,
