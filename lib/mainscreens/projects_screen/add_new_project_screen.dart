@@ -30,7 +30,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             child: Column(
               children: [
                 Image.asset(
-                  'assets/robotic_arms.png',
+                  'images/robotic_arm.png',//when runing on phone use assets/images/....
                   height: 200,
                 ),
                 TextFormField(
@@ -86,6 +86,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         link: _link,
       );
       Provider.of<ProjectProvider>(context, listen: false).addProject(newProject);
+      print("added project");
       Navigator.pop(context);
     }
   }

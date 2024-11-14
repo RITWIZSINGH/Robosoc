@@ -5,7 +5,7 @@ import 'package:robosoc/mainscreens/momscreen/mom_page.dart';
 import 'package:robosoc/mainscreens/projects_screen/projects_page.dart';
 import 'package:robosoc/mainscreens/homescreen/add_new_component_screen.dart';
 import 'package:robosoc/mainscreens/momscreen/new_mom.dart';
-import 'package:robosoc/mainscreens/projects_screen/new_project_screen.dart';
+import 'package:robosoc/mainscreens/projects_screen/add_new_project_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});

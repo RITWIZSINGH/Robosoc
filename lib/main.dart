@@ -3,6 +3,7 @@ import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:robosoc/utilities/project_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,22 +35,19 @@ final theme = ThemeData().copyWith(
 );
 
 class RobosocApp extends StatelessWidget {
-  
   const RobosocApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ComponentProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => ComponentProvider()),
+        ChangeNotifierProvider(create: (context) => ProjectProvider()),
+      ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         home: const NavigationScreen(),
         theme: theme,
-        // Uncomment the routes if needed
-        // routes: {
-        //   '/splash2': (context) => const SplashScreen2(),
-        //   '/splash3': (context) => const SplashScreen3(),
-        //   '/start': (context) => const StartScreen(),
-        // },
       ),
     );
   }
