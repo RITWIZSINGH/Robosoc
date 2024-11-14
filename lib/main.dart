@@ -11,9 +11,12 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: const FirebaseOptions(
       apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
-      appId: '1:1088636233768:web:6abf47f4ac10f300292d1d',
-      messagingSenderId: "1088636233768",
+      authDomain: "robosoc-app.firebaseapp.com",
       projectId: "robosoc-app",
+      storageBucket: "robosoc-app.appspot.com",
+      messagingSenderId: "1088636233768",
+      appId: "1:1088636233768:web:6abf47f4ac10f300292d1d",
+      measurementId: "G-413P5KJ4C3",
     ),
   );
 
