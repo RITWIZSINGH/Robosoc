@@ -1,5 +1,6 @@
-// ignore_for_file: use_super_parameters, library_private_types_in_public_api, use_build_context_synchronously
+// ignore_for_file: use_super_parameters, library_private_types_in_public_api, use_build_context_synchronously, prefer_const_literals_to_create_immutables
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/project_provider.dart';
@@ -22,47 +23,33 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-    if (imageUrl.isEmpty) {
-      return Container(
-        color: Colors.grey[800],
-        child: const Icon(
-          Icons.image,
+  return CachedNetworkImage(
+    imageUrl: imageUrl,
+    fit: BoxFit.cover,
+    httpHeaders: {
+      'Access-Control-Allow-Origin': '*',
+    },
+    placeholderFadeInDuration: const Duration(milliseconds: 250),
+    placeholder: (context, url) => Container(
+      color: Colors.grey[800],
+      child: const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white54,
+        ),
+      ),
+    ),
+    errorWidget: (context, url, error) => Container(
+      color: Colors.grey[800],
+      child: const Center(
+        child: Icon(
+          Icons.error_outline,
           color: Colors.white54,
           size: 30,
         ),
-      );
-    }
-
-    return Image.network(
-      imageUrl,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Container(
-          color: Colors.grey[800],
-          child: Center(
-            child: CircularProgressIndicator(
-              value: loadingProgress.expectedTotalBytes != null
-                  ? loadingProgress.cumulativeBytesLoaded /
-                      loadingProgress.expectedTotalBytes!
-                  : null,
-              color: Colors.white54,
-            ),
-          ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
-          color: Colors.grey[800],
-          child: const Icon(
-            Icons.error_outline,
-            color: Colors.white54,
-            size: 30,
-          ),
-        );
-      },
-    );
-  }
+      ),
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
