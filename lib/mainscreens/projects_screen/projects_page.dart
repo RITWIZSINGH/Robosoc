@@ -14,6 +14,7 @@ class ProjectsPage extends StatefulWidget {
   _ProjectsPageState createState() => _ProjectsPageState();
 }
 
+
 class _ProjectsPageState extends State<ProjectsPage> {
   @override
   void initState() {
@@ -23,33 +24,33 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-  return CachedNetworkImage(
-    imageUrl: imageUrl,
-    fit: BoxFit.cover,
-    httpHeaders: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    placeholderFadeInDuration: const Duration(milliseconds: 250),
-    placeholder: (context, url) => Container(
-      color: Colors.grey[800],
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: Colors.white54,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+      httpHeaders: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      placeholderFadeInDuration: const Duration(milliseconds: 250),
+      placeholder: (context, url) => Container(
+        color: Colors.grey[800],
+        child: const Center(
+          child: CircularProgressIndicator(
+            color: Colors.white54,
+          ),
         ),
       ),
-    ),
-    errorWidget: (context, url, error) => Container(
-      color: Colors.grey[800],
-      child: const Center(
-        child: Icon(
-          Icons.error_outline,
-          color: Colors.white54,
-          size: 30,
+      errorWidget: (context, url, error) => Container(
+        color: Colors.grey[800],
+        child: const Center(
+          child: Icon(
+            Icons.error_outline,
+            color: Colors.white54,
+            size: 30,
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {

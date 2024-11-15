@@ -49,16 +49,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const NewMomScreen(),
+                builder: (context) => MomForm(),
               ),
             );
           } else if (currentIndex == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NewProjectScreen(),
-              ),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(
+            //     builder: (context) => NewProjectScreen(),
+            //   ),
+            // );
           }
         },
         backgroundColor: Colors.black,
@@ -85,7 +85,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.history_outlined),
-            label: "Issue History",
+            label: "History",
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.document_scanner_outlined),

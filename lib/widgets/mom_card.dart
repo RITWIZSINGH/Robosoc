@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/constants.dart';
+import 'package:robosoc/models/mom.dart';
 
 class MomCard extends StatelessWidget {
-  const MomCard({super.key});
+  final Mom mom;
+
+  const MomCard({Key? key, required this.mom}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Formatting date and times for display
+    final String dayOfWeek = _formatDayOfWeek(mom.dateTime);
+    final String day = _formatDay(mom.dateTime);
+    final String month = _formatMonth(mom.dateTime);
+    final String startTime = _formatTime(mom.startTime);
+    final String endTime = _formatTime(mom.endTime);
+    final String attendance = '${mom.present} / ${mom.total}';
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
         decoration: BoxDecoration(
-            color: const Color.fromRGBO(233, 204, 255, 1),
-            borderRadius: BorderRadius.circular(10)),
+          color: const Color.fromARGB(255, 175, 89, 241),
+          borderRadius: BorderRadius.circular(10),
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
           child: Row(
@@ -21,15 +33,15 @@ class MomCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Tuesday",
+                    dayOfWeek,
                     style: momCardContenTextStyle.copyWith(fontSize: 20),
                   ),
-                  const Text(
-                    "12",
+                  Text(
+                    day,
                     style: momCardContenTextStyle,
                   ),
-                  const Text(
-                    "DEC",
+                  Text(
+                    month,
                     style: momCardContenTextStyle,
                   ),
                 ],
@@ -39,34 +51,88 @@ class MomCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    "start time",
+                    "Start Time",
                     style: momCardContenTextStyle.copyWith(
                         fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                   Container(
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: const Padding(
-                        padding: EdgeInsets.all(4.0),
-                        child: Text("85 min"),
-                      )),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 129, 64, 178),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Text(
+                        startTime,
+                        style: momCardContenTextStyle,
+                      ),
+                    ),
+                  ),
                   Text(
-                    "endTime",
+                    "End Time",
                     style: momCardContenTextStyle.copyWith(
                         fontSize: 20, fontWeight: FontWeight.w400),
                   ),
                   Text(
-                    "Attendence",
+                    endTime,
+                    style: momCardContenTextStyle,
+                  ),
+                  Text(
+                    "Attendance",
                     style: momCardContenTextStyle.copyWith(
                         fontSize: 20, fontWeight: FontWeight.w400),
-                  )
+                  ),
+                  Text(
+                    attendance,
+                    style: momCardContenTextStyle,
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  // Helper method to format the day of the week
+  String _formatDayOfWeek(DateTime date) {
+    return [
+      'Sunday',
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday'
+    ][date.weekday - 1];
+  }
+
+  // Helper method to format the day of the month
+  String _formatDay(DateTime date) {
+    return date.day.toString();
+  }
+
+  // Helper method to format the month
+  String _formatMonth(DateTime date) {
+    return [
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC'
+    ][date.month - 1];
+  }
+
+  // Helper method to format time
+  String _formatTime(DateTime dateTime) {
+    return "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
   }
 }
