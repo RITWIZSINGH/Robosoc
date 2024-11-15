@@ -23,39 +23,45 @@ class _ProjectsPageState extends State<ProjectsPage> {
   }
 
   Widget _buildImageWidget(String imageUrl) {
-  return CachedNetworkImage(
-    imageUrl: imageUrl,
-    fit: BoxFit.cover,
-    httpHeaders: {
-      'Access-Control-Allow-Origin': '*',
-    },
-    placeholderFadeInDuration: const Duration(milliseconds: 250),
-    placeholder: (context, url) => Container(
-      color: Colors.grey[800],
-      child: const Center(
-        child: CircularProgressIndicator(
-          color: Colors.white54,
+    return CachedNetworkImage(
+      imageUrl: imageUrl,
+      fit: BoxFit.cover,
+      httpHeaders: {
+        'Access-Control-Allow-Origin': '*',
+      },
+      placeholderFadeInDuration: const Duration(milliseconds: 250),
+      placeholder: (context, url) => Container(
+        color: Colors.grey[800],
+        child: const Center(
+          child: CircularProgressIndicator(
+            color: Colors.white54,
+          ),
         ),
       ),
-    ),
-    errorWidget: (context, url, error) => Container(
-      color: Colors.grey[800],
-      child: const Center(
-        child: Icon(
-          Icons.error_outline,
-          color: Colors.white54,
-          size: 30,
+      errorWidget: (context, url, error) => Container(
+        color: Colors.grey[800],
+        child: const Center(
+          child: Icon(
+            Icons.error_outline,
+            color: Colors.white54,
+            size: 30,
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Projects'),
+        bottomOpacity: 2.0,
+        title: const Text(
+          'PROJECTS',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        elevation: 20,
+        shadowColor: Colors.black45,
       ),
       body: Consumer<ProjectProvider>(
         builder: (context, projectProvider, child) {
