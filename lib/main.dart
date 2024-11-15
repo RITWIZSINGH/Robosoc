@@ -9,6 +9,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Firebase.initializeApp(
+    name: "robosoc-app",
     options: const FirebaseOptions(
       apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
       authDomain: "robosoc-app.firebaseapp.com",
@@ -26,7 +27,7 @@ Future<void> main() async {
 final kcolorScheme = ColorScheme.fromSwatch().copyWith(
   brightness: Brightness.light,
   primary: Colors.yellow,
-  secondary: Colors.orange,
+  secondary: const Color.fromARGB(255, 254, 153, 0),
   surface: Colors.white,
   onSurface: const Color.fromRGBO(183, 144, 209, 1),
 );
