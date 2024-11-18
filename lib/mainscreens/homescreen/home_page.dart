@@ -95,7 +95,11 @@ class _HomePageState extends State<HomePage> {
                   itemCount: componentProvider.components.length,
                   itemBuilder: (context, index) {
                     final component = componentProvider.components[index];
-                    return Card(
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.yellow)),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
