@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/models/component_model.dart';
+
 //this is add new component screen
 class AddNewComponentScreen extends StatefulWidget {
   const AddNewComponentScreen({super.key});
@@ -88,9 +89,10 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                   componentName = value;
                 },
                 decoration: InputDecoration(
-                  labelText: 'Enter Component Name',
-                  border: OutlineInputBorder(),
-                ),
+                    labelText: 'Enter Component Name',
+                    
+                    border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey))),
               ),
               SizedBox(height: 16),
               //Quantity TextField

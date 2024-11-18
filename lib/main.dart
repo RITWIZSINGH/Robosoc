@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ class RobosocApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: const NavigationScreen(),
+        home: NavigationScreen(),
         theme: theme,
       ),
     );
