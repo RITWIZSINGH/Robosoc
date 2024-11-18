@@ -61,7 +61,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
 
       try {
         _formKey.currentState!.save();
-        final imageUrl = await ImagePickerUtils.uploadImage(_imageFile, 'project_images');
+        final imageUrl =
+            await ImagePickerUtils.uploadImage(_imageFile, 'project_images');
 
         final newProject = Project(
           id: '',
@@ -71,7 +72,8 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           imageUrl: imageUrl ?? '',
         );
 
-        await Provider.of<ProjectProvider>(context, listen: false).addProject(newProject);
+        await Provider.of<ProjectProvider>(context, listen: false)
+            .addProject(newProject);
         Navigator.pop(context);
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -97,28 +99,53 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             child: Column(
               children: [
                 _buildImagePreview(),
-                SizedBox(height: 20),
+                SizedBox(height: 40),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Title'),
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter a title' : null,
+                  decoration: InputDecoration(
+                    labelText: 'Title',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please enter a title' : null,
                   onSaved: (value) => _title = value!,
                 ),
-                TextFormField(
-                  decoration: InputDecoration(labelText: 'Description'),
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter a description' : null,
-                  onSaved: (value) => _description = value!,
+                SizedBox(
+                  height: 20,
                 ),
                 TextFormField(
-                  decoration: InputDecoration(labelText: 'Google Drive Link'),
-                  validator: (value) => value?.isEmpty ?? true ? 'Please enter a link' : null,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  validator: (value) => value?.isEmpty ?? true
+                      ? 'Please enter a description'
+                      : null,
+                  onSaved: (value) => _description = value!,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    labelText: 'Google Drive Link',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please enter a link' : null,
                   onSaved: (value) => _link = value!,
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: _isUploading ? null : _submitForm,
-                  child: _isUploading 
-                    ? CircularProgressIndicator()
-                    : Text('Add Project'),
+                  child: _isUploading
+                      ? CircularProgressIndicator()
+                      : Text('Add Project'),
                 ),
               ],
             ),

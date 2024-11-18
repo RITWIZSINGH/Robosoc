@@ -1,12 +1,11 @@
-// ignore_for_file: prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously
-
+// lib/screens/add_new_component_screen.dart
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:robosoc/utilities/image_picker.dart';
+import 'package:robosoc/utilities/component_provider.dart';
 import 'package:robosoc/models/component_model.dart';
 
-//this is add new component screen
 class AddNewComponentScreen extends StatefulWidget {
   const AddNewComponentScreen({super.key});
 
@@ -16,27 +15,90 @@ class AddNewComponentScreen extends StatefulWidget {
 
 class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
   final _formKey = GlobalKey<FormState>();
-  late String componentName;
-  late String quantity;
-  late String description;
+  late String _componentName = '';
+  late String _quantity = '';
+  late String _description = '';
+  dynamic _imageFile;
+  bool _isUploading = false;
+
+  Widget _buildImagePreview() {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        CircleAvatar(
+          radius: 60,
+          backgroundColor: Colors.grey[300],
+          child: _imageFile == null
+              ? Icon(Icons.add_photo_alternate, size: 40)
+              : null,
+          backgroundImage: _imageFile != null
+              ? (kIsWeb
+                  ? NetworkImage(_imageFile.path)
+                  : FileImage(_imageFile) as ImageProvider)
+              : null,
+        ),
+        Positioned(
+          bottom: 0,
+          right: 100,
+          child: CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor,
+            radius: 20,
+            child: IconButton(
+              icon: Icon(Icons.camera_alt, color: Colors.white),
+              onPressed: () => ImagePickerUtils.showImageSourceDialog(
+                context,
+                (image) => setState(() => _imageFile = image),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isUploading = true);
+
+      try {
+        _formKey.currentState!.save();
+        final imageUrl =
+            await ImagePickerUtils.uploadImage(_imageFile, 'component_images');
+
+        final component = Component(
+          id: '',
+          name: _componentName,
+          quantity: int.parse(_quantity),
+          description: _description,
+          imageUrl: imageUrl ?? '',
+        );
+
+        await Provider.of<ComponentProvider>(context, listen: false)
+            .addComponent(component);
+        Navigator.pop(context);
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to add component: $e')),
+        );
+      } finally {
+        setState(() => _isUploading = false);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "Add New Component",
+          "",
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back_ios,
-            color: Colors.black,
-          ),
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
         ),
       ),
       body: SingleChildScrollView(
@@ -46,97 +108,52 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Center(
-                child: Stack(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.yellow, width: 3.0)),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 45,
-                        child: Image.asset(
-                          'assets/images/arduino.png',
-                          width: 60,
-                          height: 60,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      bottom: 0,
-                      child: Container(
-                        padding: EdgeInsets.all(4),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.edit,
-                          size: 20,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              _buildImagePreview(),
               SizedBox(height: 24),
-              //Enter Component Name
               TextFormField(
-                onChanged: (value) {
-                  componentName = value;
-                },
+                onChanged: (value) => _componentName = value,
                 decoration: InputDecoration(
-                    labelText: 'Enter Component Name',
-                    
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey))),
+                  labelText: 'Enter Component Name',
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                ),
+                validator: (value) => value?.isEmpty ?? true
+                    ? 'Please enter a component name'
+                    : null,
               ),
               SizedBox(height: 16),
-              //Quantity TextField
               TextFormField(
-                onChanged: (value) {
-                  quantity = value;
-                },
+                onChanged: (value) => _quantity = value,
                 decoration: InputDecoration(
                   labelText: 'Quantity',
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.number,
+                validator: (value) =>
+                    value?.isEmpty ?? true ? 'Please enter quantity' : null,
               ),
               SizedBox(height: 16),
-              //Description TextField
               TextFormField(
-                onChanged: (value) {
-                  description = value;
-                },
+                onChanged: (value) => _description = value,
                 decoration: InputDecoration(
                   labelText: 'Description',
                   border: OutlineInputBorder(),
                 ),
                 maxLines: 5,
+                validator: (value) =>
+                    value?.isEmpty ?? true ? 'Please enter description' : null,
               ),
               SizedBox(height: 24),
               TextButton(
-                child: Text('Save'),
+                onPressed: _isUploading ? null : _submitForm,
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,
                   backgroundColor: Colors.yellow,
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
-                onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                    final component = Component(
-                        name: componentName,
-                        quantity: int.parse(quantity),
-                        description: description);
-                    await Provider.of<ComponentProvider>(context, listen: false)
-                        .addComponent(component);
-                    Navigator.pop(context);
-                  }
-                },
+                child:
+                    _isUploading ? CircularProgressIndicator() : Text('Save'),
               ),
             ],
           ),

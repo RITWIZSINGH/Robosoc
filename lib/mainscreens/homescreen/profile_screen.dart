@@ -94,6 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _image != null
                     ? SizedBox()
                     : Positioned(
+                        top: 2,
+                        right: 3,
                         child: IconButton(
                           onPressed: selectImage,
                           icon: Icon(
