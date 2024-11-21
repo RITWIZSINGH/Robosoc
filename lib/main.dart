@@ -25,6 +25,7 @@ Future<void> main() async {
   runApp(const RobosocApp());
 }
 
+//defining color scheme
 final kcolorScheme = ColorScheme.fromSwatch().copyWith(
   brightness: Brightness.light,
   primary: Colors.yellow,
