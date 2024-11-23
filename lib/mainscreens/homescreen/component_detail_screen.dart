@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/models/component_model.dart';
@@ -38,74 +40,153 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(""),
+        title: const Text("Component Details"),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        foregroundColor: Colors.black,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Container(
-          color: Colors.white,
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.yellow, width: 22),
-                  shape: BoxShape.circle,
-                ),
-                child: Image.network(
-                  widget.component.imageUrl.isNotEmpty
-                      ? widget.component.imageUrl
-                      : 'assets/images/arduino.png',
-                  height: 200,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Image.asset('assets/images/arduino.png',
-                        height: 200);
-                  },
+              const SizedBox(height: 20),
+              // Circular Image Container
+              Center(
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Yellow circle background
+                    Container(
+                      width: 240,
+                      height: 240,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.yellow,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                    // Clipped circular image
+                    ClipOval(
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        color: Colors.white,
+                        child: Image.network(
+                          widget.component.imageUrl.isNotEmpty
+                              ? widget.component.imageUrl
+                              : 'assets/images/arduino.png',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/arduino.png',
+                              fit: BoxFit.cover,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 32),
+              // Component Name
               Text(
                 widget.component.name,
-                style:
-                    const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
+              // Component Description
               Text(
                 widget.component.description,
+                style: const TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                  height: 1.5,
+                ),
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 16),
+              ),
+              const SizedBox(height: 40),
+              // Quantity Controls
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.yellow.shade600),
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: Icon(
+                        Icons.remove_circle,
+                        size: 32,
+                        color: Colors.yellow.shade800,
+                      ),
+                      onPressed: _decrementQuantity,
+                    ),
+                    const SizedBox(width: 24),
+                    Text(
+                      '$_currentQuantity',
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(width: 24),
+                    IconButton(
+                      icon: Icon(
+                        Icons.add_circle,
+                        size: 32,
+                        color: Colors.yellow.shade800,
+                      ),
+                      onPressed: _incrementQuantity,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 40),
+              // Save Button
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Provider.of<ComponentProvider>(context, listen: false)
+                        .updateComponentQuantity(
+                            widget.component.id, _currentQuantity);
+                    Navigator.pop(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.yellow.shade600,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Save Changes',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
               const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.remove_circle, size: 40),
-                    onPressed: _decrementQuantity,
-                  ),
-                  const SizedBox(width: 20),
-                  Text(
-                    '$_currentQuantity',
-                    style: const TextStyle(fontSize: 24),
-                  ),
-                  const SizedBox(width: 20),
-                  IconButton(
-                    icon: const Icon(Icons.add_circle, size: 40),
-                    onPressed: _incrementQuantity,
-                  ),
-                ],
-              ),
-              const Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  Provider.of<ComponentProvider>(context, listen: false)
-                      .updateComponentQuantity(
-                          widget.component.id, _currentQuantity);
-                  Navigator.pop(context);
-                },
-                child: const Text('Save Changes'),
-              ),
             ],
           ),
         ),
