@@ -54,7 +54,7 @@ class RobosocApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: NavigationScreen(),
+        home: LoginScreen(),
         theme: theme,
       ),
     );

@@ -46,6 +46,7 @@ dependencies:
   provider: ^6.1.2
   intl: ^0.19.0
   cached_network_image: ^3.4.1
+  flutter_keyboard_visibility: ^6.0.0
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +76,7 @@ flutter:
     - assets\images\defaultComponent.png
     - assets\images\robotics_society_logo.png
     - assets\images\arduino.png
+    - assets/background_images/login_page.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
