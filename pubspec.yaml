@@ -77,6 +77,7 @@ flutter:
     - assets\images\robotics_society_logo.png
     - assets\images\arduino.png
     - assets/background_images/login_page.png
+    - assets/logo/robosoc_logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
