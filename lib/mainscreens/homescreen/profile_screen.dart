@@ -2,6 +2,7 @@
 import 'dart:typed_data';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/models/component.dart';
 import 'package:robosoc/utilities/image_picker.dart';
 import 'package:robosoc/widgets/issued_commponent_card.dart';
@@ -59,7 +60,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   "Profile",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                IconButton(onPressed: () {}, icon: const Icon(Icons.logout))
+                IconButton(onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                }, icon: const Icon(Icons.logout))
               ],
             ),
             const SizedBox(

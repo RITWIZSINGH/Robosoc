@@ -38,11 +38,15 @@ class _HomePageState extends State<HomePage> {
                   const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Hi!", style: TextStyle(fontSize: 16)),
+                      Text("Hi!",
+                          style: TextStyle(
+                              fontSize: 16, fontFamily: "NexaRegular")),
                       Text(
                         "Welcome",
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "NexaBold"),
                       ),
                     ],
                   ),
@@ -63,7 +67,10 @@ class _HomePageState extends State<HomePage> {
               child: TextField(
                 decoration: InputDecoration(
                   hintText: 'Search Component',
+                  hintStyle: TextStyle(fontFamily: "NexaRegular"),
                   prefixIcon: const Icon(Icons.search),
+                  fillColor: Colors.grey.shade100,
+                  filled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -122,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               component.name,
                               style: const TextStyle(
+                                fontFamily: "NexaBold",
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -129,6 +137,7 @@ class _HomePageState extends State<HomePage> {
                             Text(
                               '${component.quantity}',
                               style: const TextStyle(
+                                fontFamily: "NexaBold",
                                 fontWeight: FontWeight.w500,
                                 fontSize: 18,
                                 color: Color.fromARGB(255, 224, 75, 11),

@@ -1,5 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously// lib/screens/new_project_screen.dart, sort_child_properties_last, unused_import, unused_import, use_build_context_synchronously, use_build_context_synchronously, use_build_context_synchronously
-import 'dart:io';
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously// lib/screens/new_project_screen.dart, sort_child_properties_last, unused_import, unused_import, use_build_context_synchronously, use_build_context_synchronously, use_build_context_synchronously, prefer_const_constructors, prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, sort_child_properties_last, use_build_context_synchronously, use_build_context_synchronously, sort_child_properties_last
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -27,7 +26,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         CircleAvatar(
           radius: 60,
           backgroundColor: Colors.grey[300],
+          // ignore: sort_child_properties_last
           child: _imageFile == null
+              // ignore: prefer_const_constructors
               ? Icon(Icons.add_photo_alternate, size: 40)
               : null,
           backgroundImage: _imageFile != null
@@ -72,10 +73,13 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           imageUrl: imageUrl ?? '',
         );
 
+        // ignore: use_build_context_synchronously
         await Provider.of<ProjectProvider>(context, listen: false)
             .addProject(newProject);
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } catch (e) {
+        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to add project: $e')),
         );

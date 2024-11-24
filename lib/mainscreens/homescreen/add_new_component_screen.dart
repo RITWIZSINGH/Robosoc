@@ -1,4 +1,6 @@
 // lib/screens/add_new_component_screen.dart
+// ignore_for_file: sort_child_properties_last, use_build_context_synchronously
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

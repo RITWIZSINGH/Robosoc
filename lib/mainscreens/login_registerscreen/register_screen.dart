@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, use_build_context_synchronously, use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';

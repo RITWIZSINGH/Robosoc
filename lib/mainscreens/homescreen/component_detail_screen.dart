@@ -1,4 +1,4 @@
-// ignore_for_file: use_super_parameters
+// ignore_for_file: use_super_parameters, library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +40,7 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Component Details"),
+        title: const Text(""),
         backgroundColor: Colors.white,
         elevation: 0,
         foregroundColor: Colors.black,
@@ -98,6 +98,7 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
               Text(
                 widget.component.name,
                 style: const TextStyle(
+                  fontFamily: "NexaBold",
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -109,6 +110,7 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
               Text(
                 widget.component.description,
                 style: const TextStyle(
+                  fontFamily: "NexaRegular",
                   fontSize: 16,
                   color: Colors.black87,
                   height: 1.5,
@@ -141,6 +143,7 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
                     Text(
                       '$_currentQuantity',
                       style: const TextStyle(
+                        fontFamily: "NexaBold",
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
@@ -170,7 +173,7 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.yellow.shade600,
+                    backgroundColor: Colors.yellow.shade500,
                     foregroundColor: Colors.black,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -178,8 +181,9 @@ class _ComponentDetailScreenState extends State<ComponentDetailScreen> {
                     elevation: 0,
                   ),
                   child: const Text(
-                    'Save Changes',
+                    'SAVE CHANGES',
                     style: TextStyle(
+                      fontFamily: "NexaBold",
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
