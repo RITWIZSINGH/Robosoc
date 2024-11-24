@@ -35,15 +35,25 @@ void _register() async {
     });
     
     try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      // Create user with email and password
+      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
       
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => NavigationScreen()),
+      // Send email verification
+      await userCredential.user!.sendEmailVerification();
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Verification email sent. Please verify your email before logging in.'),
+          duration: Duration(seconds: 5),
+        ),
       );
+      
+      // Navigate back to login screen
+      Navigator.of(context).pop();
+      
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Registration failed: ${e.toString()}')),
@@ -57,6 +67,7 @@ void _register() async {
     }
   }
 }
+
 
   @override
   Widget build(BuildContext context) {
