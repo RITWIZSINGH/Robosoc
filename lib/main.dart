@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/startscreen/start_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';

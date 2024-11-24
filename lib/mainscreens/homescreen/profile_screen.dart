@@ -60,9 +60,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   "Profile",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
-                IconButton(onPressed: () {
-                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
-                }, icon: const Icon(Icons.logout))
+                IconButton(
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                          (route) => false);
+                    },
+                    icon: const Icon(Icons.logout))
               ],
             ),
             const SizedBox(

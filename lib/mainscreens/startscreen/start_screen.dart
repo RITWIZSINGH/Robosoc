@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/startscreen/splash_screen1.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -17,7 +18,7 @@ class _StartScreenState extends State<StartScreen> {
     super.initState();
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) =>  NavigationScreen()));
+          MaterialPageRoute(builder: (context) =>  SplashScreen1()));
     });
   }
 
