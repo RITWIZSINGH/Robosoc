@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                 ),
                 IconButton(onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
                 }, icon: const Icon(Icons.logout))
               ],
             ),

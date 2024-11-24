@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   bool _isLoading = false;
+  bool _isPasswordVisible = false;
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
@@ -215,28 +216,42 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                     ),
                                     const SizedBox(height: 16),
-                                    TextFormField(
-                                      controller: _passwordController,
-                                      obscureText: true,
-                                      decoration: InputDecoration(
-                                        hintText: 'Enter Password',
-                                        hintStyle: const TextStyle(
-                                          fontFamily: "NexaRegular",
-                                        ),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
-                                        ),
-                                        filled: true,
-                                        fillColor: const Color(0xFFF5F5F5),
-                                      ),
-                                      validator: (value) {
-                                        if (value?.isEmpty ?? true) {
-                                          return 'Please enter your password';
-                                        }
-                                        return null;
-                                      },
-                                    ),
+                                     TextFormField(
+                              controller: _passwordController,
+                              obscureText: !_isPasswordVisible, // Toggle visibility
+                              decoration: InputDecoration(
+                                hintText: 'Enter Password',
+                                hintStyle: const TextStyle(
+                                  fontFamily: "NexaRegular",
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                filled: true,
+                                fillColor: const Color(0xFFF5F5F5),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                    color: Colors.grey,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isPasswordVisible =
+                                          !_isPasswordVisible; // Toggle state
+                                    });
+                                  },
+                                ),
+                              ),
+                              validator: (value) {
+                                if (value?.isEmpty ?? true) {
+                                  return 'Please enter your password';
+                                }
+                                return null;
+                              },
+                            ),
+
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: TextButton(
