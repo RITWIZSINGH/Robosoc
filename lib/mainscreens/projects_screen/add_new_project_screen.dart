@@ -93,11 +93,22 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Add Project'),
+        title: const Text(
+          "",
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(
+          onPressed: () => Navigator.pop(context),
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Container(
+        height: double.infinity,
+        color: Colors.white,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
           child: Form(
             key: _formKey,
             child: Column(
@@ -106,6 +117,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 SizedBox(height: 40),
                 TextFormField(
                   decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelStyle: TextStyle(fontFamily: "NexaBold"),
                     labelText: 'Title',
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
@@ -120,21 +134,9 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Description',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
-                  ),
-                  validator: (value) => value?.isEmpty ?? true
-                      ? 'Please enter a description'
-                      : null,
-                  onSaved: (value) => _description = value!,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelStyle: TextStyle(fontFamily: "NexaBold"),
                     labelText: 'Google Drive Link',
                     border: OutlineInputBorder(
                       borderSide: BorderSide(color: Colors.grey),
@@ -144,12 +146,40 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
                       value?.isEmpty ?? true ? 'Please enter a link' : null,
                   onSaved: (value) => _link = value!,
                 ),
+                SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelStyle: TextStyle(fontFamily: "NexaBold"),
+                    labelText: 'Description',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                  maxLines: 5,
+                  validator: (value) => value?.isEmpty ?? true
+                      ? 'Please enter a description'
+                      : null,
+                  onSaved: (value) => _description = value!,
+                ),
                 SizedBox(height: 20),
-                ElevatedButton(
+                TextButton(
                   onPressed: _isUploading ? null : _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.yellow,
+                    padding:
+                        EdgeInsets.symmetric(vertical: 15, horizontal: 105),
+                  ),
                   child: _isUploading
                       ? CircularProgressIndicator()
-                      : Text('Add Project'),
+                      : Text(
+                          'Add Project'.toUpperCase(),
+                          style: TextStyle(fontFamily: "NexaBold"),
+                        ),
                 ),
               ],
             ),

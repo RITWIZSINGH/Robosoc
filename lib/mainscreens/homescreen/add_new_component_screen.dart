@@ -103,61 +103,79 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _buildImagePreview(),
-              SizedBox(height: 24),
-              TextFormField(
-                onChanged: (value) => _componentName = value,
-                decoration: InputDecoration(
-                  labelText: 'Enter Component Name',
-                  border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
+      body: Container(
+        height: double.infinity,
+        color: Colors.white,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _buildImagePreview(),
+                SizedBox(height: 24),
+                TextFormField(
+                  onChanged: (value) => _componentName = value,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelStyle: TextStyle(fontFamily: "NexaBold"),
+                    labelText: 'Enter Component Name',
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
                   ),
+                  validator: (value) => value?.isEmpty ?? true
+                      ? 'Please enter a component name'
+                      : null,
                 ),
-                validator: (value) => value?.isEmpty ?? true
-                    ? 'Please enter a component name'
-                    : null,
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                onChanged: (value) => _quantity = value,
-                decoration: InputDecoration(
-                  labelText: 'Quantity',
-                  border: OutlineInputBorder(),
+                SizedBox(height: 16),
+                TextFormField(
+                  onChanged: (value) => _quantity = value,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelStyle: TextStyle(fontFamily: "NexaBold"),
+                    labelText: 'Quantity',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.number,
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please enter quantity' : null,
                 ),
-                keyboardType: TextInputType.number,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Please enter quantity' : null,
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                onChanged: (value) => _description = value,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
+                SizedBox(height: 16),
+                TextFormField(
+                  onChanged: (value) => _description = value,
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelStyle: TextStyle(fontFamily: "NexaBold"),
+                    labelText: 'Description',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 5,
+                  validator: (value) => value?.isEmpty ?? true
+                      ? 'Please enter description'
+                      : null,
                 ),
-                maxLines: 5,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Please enter description' : null,
-              ),
-              SizedBox(height: 24),
-              TextButton(
-                onPressed: _isUploading ? null : _submitForm,
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: Colors.yellow,
-                  padding: EdgeInsets.symmetric(vertical: 16),
+                SizedBox(height: 24),
+                TextButton(
+                  onPressed: _isUploading ? null : _submitForm,
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.black,
+                    backgroundColor: Colors.yellow,
+                    padding: EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: _isUploading
+                      ? CircularProgressIndicator()
+                      : Text(
+                          'SAVE',
+                          style: TextStyle(fontFamily: "NexaBold"),
+                        ),
                 ),
-                child:
-                    _isUploading ? CircularProgressIndicator() : Text('Save'),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
