@@ -105,6 +105,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
       ),
       body: Container(
         height: double.infinity,
+        width: double.infinity,
         color: Colors.white,
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
