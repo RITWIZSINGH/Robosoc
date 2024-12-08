@@ -12,7 +12,7 @@ import 'package:robosoc/utilities/project_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
+  await Firebase.initializeApp( 
     name: "robosoc-app",
     options: const FirebaseOptions(
       apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
