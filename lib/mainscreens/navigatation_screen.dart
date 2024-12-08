@@ -20,7 +20,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   int currentIndex = 0;
   final List<Widget> pages = [
     HomePage(),
-    ProjectsPage(),
+    ProjectsScreen(),
     IssueHistory(),
     MOMPage(),
   ];
@@ -58,7 +58,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => NewProjectScreen(),
+                builder: (context) => AddProjectScreen(),
               ),
             );
           }

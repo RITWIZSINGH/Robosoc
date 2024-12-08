@@ -1,21 +1,20 @@
-// ignore_for_file: use_super_parameters, library_private_types_in_public_api, use_build_context_synchronously, prefer_const_literals_to_create_immutables, unused_import
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:robosoc/models/project_model.dart';
 import 'package:robosoc/utilities/project_provider.dart';
 import 'package:robosoc/mainscreens/projects_screen/detailed_project_viewscreen.dart';
-import 'package:robosoc/mainscreens/projects_screen/add_new_project_screen.dart';
+import 'package:robosoc/widgets/project_list_item.dart';
 
-class ProjectsPage extends StatefulWidget {
-  const ProjectsPage({Key? key}) : super(key: key);
+class ProjectsScreen extends StatefulWidget {
+  const ProjectsScreen({Key? key}) : super(key: key);
 
   @override
-  _ProjectsPageState createState() => _ProjectsPageState();
+  _ProjectsScreenState createState() => _ProjectsScreenState();
 }
 
+class _ProjectsScreenState extends State<ProjectsScreen> {
+  final TextEditingController _searchController = TextEditingController();
 
-class _ProjectsPageState extends State<ProjectsPage> {
   @override
   void initState() {
     super.initState();
@@ -23,125 +22,140 @@ class _ProjectsPageState extends State<ProjectsPage> {
         Provider.of<ProjectProvider>(context, listen: false).fetchProjects());
   }
 
-  Widget _buildImageWidget(String imageUrl) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      fit: BoxFit.cover,
-      httpHeaders: {
-        'Access-Control-Allow-Origin': '*',
-      },
-      placeholderFadeInDuration: const Duration(milliseconds: 250),
-      placeholder: (context, url) => Container(
-        color: Colors.grey[800],
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: Colors.white54,
-          ),
-        ),
-      ),
-      errorWidget: (context, url, error) => Container(
-        color: Colors.grey[800],
-        child: const Center(
-          child: Icon(
-            Icons.error_outline,
-            color: Colors.white54,
-            size: 30,
-          ),
-        ),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        bottomOpacity: 2.0,
-        title: const Text(
-          'PROJECTS',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-        elevation: 20,
-        shadowColor: Colors.black45,
-      ),
-      body: Consumer<ProjectProvider>(
-        builder: (context, projectProvider, child) {
-          if (projectProvider.isLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (projectProvider.projects.isEmpty) {
-            return const Center(
-              child: Text('No projects available'),
-            );
-          }
-
-          return GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
-              childAspectRatio: 0.8,
-            ),
-            itemCount: projectProvider.projects.length,
-            itemBuilder: (context, index) {
-              final project = projectProvider.projects[index];
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailedProjectViewscreen(
-                        project: project,
-                      ),
-                    ),
-                  );
-                },
-                child: Card(
-                  color: Colors.black,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Expanded(
-                        flex: 3,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(12),
-                          ),
-                          child: _buildImageWidget(project.imageUrl),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: const [
+                      Text(
+                        'Hi!',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            project.title,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                          ),
+                      Text(
+                        'Welcome',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.grey,
                         ),
                       ),
                     ],
                   ),
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.blue[100],
+                    child: const Icon(Icons.person),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Search Project',
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: const Icon(Icons.search),
                 ),
-              );
-            },
-          );
-        },
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Ongoing Projects',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: Consumer<ProjectProvider>(
+                  builder: (context, projectProvider, child) {
+                    if (projectProvider.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    final ongoingProjects = projectProvider.projects
+                        .where((p) => p.status == 'ongoing')
+                        .toList();
+
+                    return ListView.builder(
+                      itemCount: ongoingProjects.length,
+                      itemBuilder: (context, index) {
+                        return ProjectListItem(
+                          project: ongoingProjects[index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailedProjectScreen(
+                                  project: ongoingProjects[index],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                'Completed Projects',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Expanded(
+                child: Consumer<ProjectProvider>(
+                  builder: (context, projectProvider, child) {
+                    final completedProjects = projectProvider.projects
+                        .where((p) => p.status == 'completed')
+                        .toList();
+
+                    return ListView.builder(
+                      itemCount: completedProjects.length,
+                      itemBuilder: (context, index) {
+                        return ProjectListItem(
+                          project: completedProjects[index],
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailedProjectScreen(
+                                  project: completedProjects[index],
+                                ),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

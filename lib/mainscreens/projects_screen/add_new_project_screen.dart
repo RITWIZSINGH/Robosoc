@@ -1,17 +1,17 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, use_build_context_synchronously// lib/screens/new_project_screen.dart, sort_child_properties_last, unused_import, unused_import, use_build_context_synchronously, use_build_context_synchronously, use_build_context_synchronously, prefer_const_constructors, prefer_const_constructors, sort_child_properties_last, use_build_context_synchronously, sort_child_properties_last, use_build_context_synchronously, use_build_context_synchronously, sort_child_properties_last
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:robosoc/utilities/image_picker.dart';
-import 'package:robosoc/utilities/project_provider.dart';
 import 'package:robosoc/models/project_model.dart';
+import 'package:robosoc/utilities/project_provider.dart';
+import 'package:robosoc/utilities/image_picker.dart';
 
-class NewProjectScreen extends StatefulWidget {
+class AddProjectScreen extends StatefulWidget {
+  const AddProjectScreen({Key? key}) : super(key: key);
+
   @override
-  _NewProjectScreenState createState() => _NewProjectScreenState();
+  _AddProjectScreenState createState() => _AddProjectScreenState();
 }
 
-class _NewProjectScreenState extends State<NewProjectScreen> {
+class _AddProjectScreenState extends State<AddProjectScreen> {
   final _formKey = GlobalKey<FormState>();
   String _title = '';
   String _description = '';
@@ -26,16 +26,10 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
         CircleAvatar(
           radius: 60,
           backgroundColor: Colors.grey[300],
-          // ignore: sort_child_properties_last
           child: _imageFile == null
-              // ignore: prefer_const_constructors
-              ? Icon(Icons.add_photo_alternate, size: 40)
+              ? const Icon(Icons.add_photo_alternate, size: 40)
               : null,
-          backgroundImage: _imageFile != null
-              ? (kIsWeb
-                  ? NetworkImage(_imageFile.path)
-                  : FileImage(_imageFile) as ImageProvider)
-              : null,
+          backgroundImage: _imageFile != null ? FileImage(_imageFile) : null,
         ),
         Positioned(
           bottom: 0,
@@ -44,7 +38,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             backgroundColor: Theme.of(context).primaryColor,
             radius: 20,
             child: IconButton(
-              icon: Icon(Icons.camera_alt, color: Colors.white),
+              icon: const Icon(Icons.camera_alt, color: Colors.white),
               onPressed: () => ImagePickerUtils.showImageSourceDialog(
                 context,
                 (image) => setState(() => _imageFile = image),
@@ -56,16 +50,20 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
     );
   }
 
-  void _submitForm() async {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isUploading = true);
 
       try {
         _formKey.currentState!.save();
-        final imageUrl =
-            await ImagePickerUtils.uploadImage(_imageFile, 'project_images');
+        final imageUrl = await ImagePickerUtils.uploadImage(
+          _imageFile,
+          'project_images',
+        );
 
         final newProject = Project(
+          status: '',
+          teamLeader: '',
           id: '',
           title: _title,
           description: _description,
@@ -73,13 +71,10 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
           imageUrl: imageUrl ?? '',
         );
 
-        // ignore: use_build_context_synchronously
         await Provider.of<ProjectProvider>(context, listen: false)
             .addProject(newProject);
-        // ignore: use_build_context_synchronously
         Navigator.pop(context);
       } catch (e) {
-        // ignore: use_build_context_synchronously
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to add project: $e')),
         );
@@ -94,7 +89,7 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "",
+          'Add New Project',
           style: TextStyle(color: Colors.black),
         ),
         backgroundColor: Colors.white,
@@ -114,72 +109,63 @@ class _NewProjectScreenState extends State<NewProjectScreen> {
             child: Column(
               children: [
                 _buildImagePreview(),
-                SizedBox(height: 40),
+                const SizedBox(height: 40),
                 TextFormField(
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
-                    labelStyle: TextStyle(fontFamily: "NexaBold"),
                     labelText: 'Title',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    labelStyle: const TextStyle(fontFamily: "NexaBold"),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter a title' : null,
                   onSaved: (value) => _title = value!,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
-                    labelStyle: TextStyle(fontFamily: "NexaBold"),
                     labelText: 'Google Drive Link',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    labelStyle: const TextStyle(fontFamily: "NexaBold"),
+                    border: const OutlineInputBorder(),
                   ),
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter a link' : null,
                   onSaved: (value) => _link = value!,
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.grey.shade200,
-                    labelStyle: TextStyle(fontFamily: "NexaBold"),
                     labelText: 'Description',
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey),
-                    ),
+                    labelStyle: const TextStyle(fontFamily: "NexaBold"),
+                    border: const OutlineInputBorder(),
                   ),
                   maxLines: 5,
-                  validator: (value) => value?.isEmpty ?? true
-                      ? 'Please enter a description'
-                      : null,
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please enter a description' : null,
                   onSaved: (value) => _description = value!,
                 ),
-                SizedBox(height: 20),
-                TextButton(
-                  onPressed: _isUploading ? null : _submitForm,
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.black,
-                    backgroundColor: Colors.yellow,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 15, horizontal: 105),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: _isUploading ? null : _submitForm,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.yellow,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                    ),
+                    child: _isUploading
+                        ? const CircularProgressIndicator()
+                        : Text(
+                            'ADD PROJECT',
+                            style: const TextStyle(fontFamily: "NexaBold"),
+                          ),
                   ),
-                  child: _isUploading
-                      ? CircularProgressIndicator()
-                      : Text(
-                          'Add Project'.toUpperCase(),
-                          style: TextStyle(fontFamily: "NexaBold"),
-                        ),
                 ),
               ],
             ),
