@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
@@ -111,9 +113,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  labelText: 'Update Title',
-                  border: OutlineInputBorder(),
-                ),
+                    hintText: ' Title',
+                    border: OutlineInputBorder(),
+                    fillColor: Color.fromARGB(120, 188, 188, 188),
+                    filled: true),
                 validator: (value) =>
                     value?.isEmpty ?? true ? 'Please enter a title' : null,
               ),
@@ -125,9 +128,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       onTap: () => _selectDate(true),
                       child: InputDecorator(
                         decoration: const InputDecoration(
-                          labelText: 'Start Date',
-                          border: OutlineInputBorder(),
-                        ),
+                            hintText: 'Start Date',
+                            border: OutlineInputBorder(),
+                            fillColor: Color.fromARGB(120, 188, 188, 188),
+                            filled: true),
                         child: Text(
                           _startDate != null
                               ? "${_startDate!.day}/${_startDate!.month}/${_startDate!.year}"
@@ -142,9 +146,10 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       onTap: () => _selectDate(false),
                       child: InputDecorator(
                         decoration: const InputDecoration(
-                          labelText: 'End Date',
-                          border: OutlineInputBorder(),
-                        ),
+                            hintText: 'End Date',
+                            border: OutlineInputBorder(),
+                            fillColor: Color.fromARGB(120, 188, 188, 188),
+                            filled: true),
                         child: Text(
                           _endDate != null
                               ? "${_endDate!.day}/${_endDate!.month}/${_endDate!.year}"
@@ -159,12 +164,14 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
               TextFormField(
                 controller: _descriptionController,
                 decoration: const InputDecoration(
-                  labelText: 'Description',
-                  border: OutlineInputBorder(),
-                ),
+                    hintText: 'Description',
+                    border: OutlineInputBorder(),
+                    fillColor: Color.fromARGB(120, 188, 188, 188),
+                    filled: true),
                 maxLines: 5,
-                validator: (value) =>
-                    value?.isEmpty ?? true ? 'Please enter a description' : null,
+                validator: (value) => value?.isEmpty ?? true
+                    ? 'Please enter a description'
+                    : null,
               ),
               const SizedBox(height: 20),
               Row(
@@ -173,15 +180,16 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                     child: TextFormField(
                       controller: _commentController,
                       decoration: const InputDecoration(
-                        labelText: 'Add Comment',
-                        border: OutlineInputBorder(),
-                      ),
+                          hintText: 'Add Comment',
+                          border: OutlineInputBorder(),
+                          fillColor: Color.fromARGB(120, 188, 188, 188),
+                          filled: true),
                     ),
                   ),
                   const SizedBox(width: 10),
                   IconButton(
                     icon: const Icon(Icons.add_circle),
-                    color: Colors.yellow,
+                    color: Colors.amber,
                     onPressed: _addComment,
                   ),
                 ],
@@ -210,7 +218,7 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
               ElevatedButton(
                 onPressed: _saveUpdate,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.yellow,
+                  backgroundColor: Colors.amber,
                   padding: const EdgeInsets.symmetric(vertical: 15),
                 ),
                 child: const Text(

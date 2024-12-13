@@ -46,19 +46,27 @@ class DetailedProjectScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image with error handling
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Image.network(
-                project.imageUrl,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey[300],
-                    child: const Center(
-                      child: Icon(Icons.image_not_supported),
-                    ),
-                  );
-                },
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.amber, width: 4),
+                  borderRadius: BorderRadius.circular(19)),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: AspectRatio(
+                  aspectRatio: 1 / 1.25,
+                  child: Image.network(
+                    project.imageUrl,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: Colors.grey[300],
+                        child: const Center(
+                          child: Icon(Icons.image_not_supported),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ),
             Padding(
