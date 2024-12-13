@@ -90,7 +90,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       appBar: AppBar(
         title: const Text(
           'Add New Project',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+              color: Colors.amber,
+              fontFamily: "NexaBold",
+              fontWeight: FontWeight.w900),
         ),
         backgroundColor: Colors.white,
         elevation: 0,
@@ -145,8 +148,9 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                     border: const OutlineInputBorder(),
                   ),
                   maxLines: 5,
-                  validator: (value) =>
-                      value?.isEmpty ?? true ? 'Please enter a description' : null,
+                  validator: (value) => value?.isEmpty ?? true
+                      ? 'Please enter a description'
+                      : null,
                   onSaved: (value) => _description = value!,
                 ),
                 const SizedBox(height: 20),

@@ -97,7 +97,16 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add New Update'),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 18.0),
+          child: Text(
+            'Add New Update'.toUpperCase(),
+            style: TextStyle(
+                color: Colors.amber,
+                fontFamily: "NexaBold",
+                fontWeight: FontWeight.w900),
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Navigator.pop(context),
@@ -114,8 +123,9 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                 controller: _titleController,
                 decoration: const InputDecoration(
                     hintText: ' Title',
+                    hintStyle: TextStyle(fontFamily: "NexaRegular"),
                     border: OutlineInputBorder(),
-                    fillColor: Color.fromARGB(120, 188, 188, 188),
+                    fillColor: Color.fromARGB(80, 188, 188, 188),
                     filled: true),
                 validator: (value) =>
                     value?.isEmpty ?? true ? 'Please enter a title' : null,
@@ -129,13 +139,15 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       child: InputDecorator(
                         decoration: const InputDecoration(
                             hintText: 'Start Date',
+                            hintStyle: TextStyle(fontFamily: "NexaRegular"),
                             border: OutlineInputBorder(),
-                            fillColor: Color.fromARGB(120, 188, 188, 188),
+                            fillColor: Color.fromARGB(80, 188, 188, 188),
                             filled: true),
                         child: Text(
                           _startDate != null
                               ? "${_startDate!.day}/${_startDate!.month}/${_startDate!.year}"
                               : 'Select Start Date',
+                          style: TextStyle(fontFamily: "NexaRegular"),
                         ),
                       ),
                     ),
@@ -147,13 +159,15 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       child: InputDecorator(
                         decoration: const InputDecoration(
                             hintText: 'End Date',
+                            hintStyle: TextStyle(fontFamily: "NexaRegular"),
                             border: OutlineInputBorder(),
-                            fillColor: Color.fromARGB(120, 188, 188, 188),
+                            fillColor: Color.fromARGB(80, 188, 188, 188),
                             filled: true),
                         child: Text(
                           _endDate != null
                               ? "${_endDate!.day}/${_endDate!.month}/${_endDate!.year}"
                               : 'Select End Date',
+                          style: TextStyle(fontFamily: "NexaRegular"),
                         ),
                       ),
                     ),
@@ -165,8 +179,9 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                 controller: _descriptionController,
                 decoration: const InputDecoration(
                     hintText: 'Description',
+                    hintStyle: TextStyle(fontFamily: "NexaRegular"),
                     border: OutlineInputBorder(),
-                    fillColor: Color.fromARGB(120, 188, 188, 188),
+                    fillColor: Color.fromARGB(80, 188, 188, 188),
                     filled: true),
                 maxLines: 5,
                 validator: (value) => value?.isEmpty ?? true
@@ -181,8 +196,9 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                       controller: _commentController,
                       decoration: const InputDecoration(
                           hintText: 'Add Comment',
+                          hintStyle: TextStyle(fontFamily: "NexaRegular"),
                           border: OutlineInputBorder(),
-                          fillColor: Color.fromARGB(120, 188, 188, 188),
+                          fillColor: Color.fromARGB(80, 188, 188, 188),
                           filled: true),
                     ),
                   ),
@@ -222,11 +238,12 @@ class _AddUpdateScreenState extends State<AddUpdateScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 15),
                 ),
                 child: const Text(
-                  'Save',
+                  'SAVE',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 16,
-                    fontWeight: FontWeight.bold,
+                    fontFamily: "NexaBold",
+                    fontWeight: FontWeight.w900,
                   ),
                 ),
               ),

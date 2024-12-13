@@ -2,10 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:robosoc/models/project_model.dart';
 import 'package:robosoc/utilities/project_provider.dart';
 import 'package:robosoc/mainscreens/projects_screen/detailed_project_viewscreen.dart';
 import 'package:robosoc/widgets/project_list_item.dart';
+import 'package:robosoc/widgets/user_image.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({Key? key}) : super(key: key);
@@ -27,7 +29,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,s
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -37,30 +39,30 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
+                  const Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
+                    children: [
+                      Text("Hi!",
+                          style: TextStyle(
+                              fontSize: 16, fontFamily: "NexaRegular")),
                       Text(
-                        'Hi!',
+                        "Welcome",
                         style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Text(
-                        'Welcome',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.grey,
-                        ),
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "NexaBold"),
                       ),
                     ],
                   ),
-                  CircleAvatar(
-                    radius: 25,
-                    backgroundColor: Colors.blue[100],
-                    child: const Icon(Icons.person),
-                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfileScreen())),
+                    child: const UserImage(
+                      imagePath: "assets/images/defaultPerson.png",
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 20),
@@ -68,13 +70,13 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 controller: _searchController,
                 decoration: InputDecoration(
                   hintText: 'Search Project',
+                  hintStyle: TextStyle(fontFamily: "NexaRegular"),
+                  prefixIcon: const Icon(Icons.search),
+                  fillColor: Colors.grey.shade100,
                   filled: true,
-                  fillColor: Colors.grey[100],
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none,
                   ),
-                  prefixIcon: const Icon(Icons.search),
                 ),
               ),
               const SizedBox(height: 20),
@@ -82,6 +84,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 'Ongoing Projects',
                 style: TextStyle(
                   fontSize: 18,
+                  fontFamily: "NexaBold",
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -123,6 +126,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 'Completed Projects',
                 style: TextStyle(
                   fontSize: 18,
+                  fontFamily: "NexaBold",
                   fontWeight: FontWeight.bold,
                 ),
               ),

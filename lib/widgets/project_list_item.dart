@@ -19,6 +19,7 @@ class ProjectListItem extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
           border: Border.all(color: Colors.amber)),
       child: ListTile(
         onTap: onTap,
@@ -29,12 +30,14 @@ class ProjectListItem extends StatelessWidget {
         title: Text(
           project.title,
           style: const TextStyle(
+            fontFamily: "NexaBold",
             fontWeight: FontWeight.bold,
           ),
         ),
         subtitle: Text(
           'Team Leader: ${project.teamLeader}',
           style: TextStyle(
+            fontFamily: "NexaRegular",
             color: Colors.grey[600],
           ),
         ),

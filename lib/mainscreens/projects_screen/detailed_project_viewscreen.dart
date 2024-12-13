@@ -26,7 +26,16 @@ class DetailedProjectScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(project.title),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 32.0),
+          child: Text(
+            project.title.toUpperCase(),
+            style: TextStyle(
+                color: Colors.amber,
+                fontFamily: "NexaBold",
+                fontWeight: FontWeight.w900),
+          ),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
@@ -75,31 +84,47 @@ class DetailedProjectScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    project.title,
+                    project.title.toUpperCase(),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        fontWeight: FontWeight.bold, fontFamily: "NexaBold"),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     project.description,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge
+                        ?.copyWith(fontFamily: "NexaRegular"),
                   ),
                   const SizedBox(height: 16),
                   if (project.link.isNotEmpty)
                     ElevatedButton.icon(
                       onPressed: _launchProjectLink,
-                      icon: const Icon(Icons.link),
-                      label: const Text('View Project'),
+                      icon: const Icon(
+                        Icons.link,
+                        color: Colors.amber,
+                      ),
+                      label: const Text(
+                        'View Project',
+                        style: TextStyle(
+                            color: Colors.amber, fontFamily: "NexaBold"),
+                      ),
                     ),
                   const SizedBox(height: 24),
                   Text(
-                    'Updates',
-                    style: Theme.of(context).textTheme.titleLarge,
+                    'UPDATES',
+                    style: TextStyle(
+                      fontFamily: "NexaBold",
+                      fontSize: 26,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   project.updates.isEmpty
-                      ? const Center(child: Text('No updates yet'))
+                      ? const Center(
+                          child: Text(
+                          'No updates yet',
+                          style: TextStyle(fontFamily: "NexaRegular"),
+                        ))
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
