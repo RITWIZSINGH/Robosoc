@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
+import 'package:robosoc/mainscreens/startscreen/splash_screen1.dart';
 import 'package:robosoc/mainscreens/startscreen/start_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
@@ -12,10 +13,10 @@ import 'package:robosoc/utilities/project_provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp( 
+  await Firebase.initializeApp(
     name: "robosoc-app",
     options: const FirebaseOptions(
-      apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",  
+      apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
       authDomain: "robosoc-app.firebaseapp.com",
       projectId: "robosoc-app",
       storageBucket: "robosoc-app.appspot.com",
@@ -55,7 +56,7 @@ class RobosocApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: NavigationScreen(),
+        home: LoginScreen(),
         theme: theme,
       ),
     );

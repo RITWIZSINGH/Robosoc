@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'loading_screen.dart';
 
@@ -54,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
 
         // Navigate back to login screen
-        Navigator.of(context).pop();
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginScreen()));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${e.toString()}')),
@@ -160,7 +161,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Expanded(
                                         child: TextButton(
                                           onPressed: () {
-                                            Navigator.pop(context);
+                                            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> LoginScreen()));
                                           },
                                           style: TextButton.styleFrom(
                                             foregroundColor: Colors.black,
