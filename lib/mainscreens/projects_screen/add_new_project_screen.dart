@@ -16,6 +16,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   String _title = '';
   String _description = '';
   String _link = '';
+  String _teamLeader = ''; // New field for team leader
   dynamic _imageFile;
   bool _isUploading = false;
 
@@ -50,8 +51,38 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
     );
   }
 
+  void _showValidationDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Incomplete Form', style: TextStyle(fontFamily: "NexaBold")),
+        content: const Text(
+          'Please fill in all fields:\n'
+          '- Project Title\n'
+          '- Google Drive Link\n'
+          '- Description\n'
+          '- Team Leader Name\n'
+          '- Project Image',
+          style: TextStyle(fontFamily: "NexaRegular"),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('OK', style: TextStyle(fontFamily: "NexaBold")),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
+      // Additional check for image and other fields
+      if (_imageFile == null) {
+        _showValidationDialog();
+        return;
+      }
+
       setState(() => _isUploading = true);
 
       try {
@@ -63,7 +94,7 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
 
         final newProject = Project(
           status: '',
-          teamLeader: '',
+          teamLeader: _teamLeader,
           id: '',
           title: _title,
           description: _description,
@@ -81,6 +112,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
       } finally {
         setState(() => _isUploading = false);
       }
+    } else {
+      _showValidationDialog();
     }
   }
 
@@ -102,9 +135,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
         ),
       ),
-      body: Container(
-        height: double.infinity,
-        color: Colors.white,
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Form(
@@ -124,6 +156,19 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                   validator: (value) =>
                       value?.isEmpty ?? true ? 'Please enter a title' : null,
                   onSaved: (value) => _title = value!,
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelText: 'Team Leader Name',
+                    labelStyle: const TextStyle(fontFamily: "NexaBold"),
+                    border: const OutlineInputBorder(),
+                  ),
+                  validator: (value) =>
+                      value?.isEmpty ?? true ? 'Please enter team leader name' : null,
+                  onSaved: (value) => _teamLeader = value!,
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
