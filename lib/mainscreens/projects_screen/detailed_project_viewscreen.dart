@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously, use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:robosoc/models/project_model.dart';
 import 'package:robosoc/mainscreens/project_updates/add_update_screen.dart';
@@ -136,14 +138,17 @@ class DetailedProjectScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(left: 32.0),
-          child: Text(
-            project.title.toUpperCase(),
-            style: TextStyle(
-              color: statusColor,
-              fontFamily: "NexaBold",
-              fontWeight: FontWeight.w900,
+        title: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 32.0),
+            child: Text(
+              project.title.toUpperCase(),
+              style: TextStyle(
+                color: statusColor,
+                fontFamily: "NexaBold",
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ),
         ),
@@ -266,13 +271,62 @@ class DetailedProjectScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   project.updates.isEmpty
                       ? Center(
-                          child: Text(
-                          'No updates yet',
-                          style: TextStyle(
-                            fontFamily: "NexaRegular",
-                            // color: statusColor.withValues(alpha: 0.6),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.update_disabled_outlined,
+                                size: 80,
+                                color: statusColor.withValues(alpha: 0.5),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                'No Updates Yet',
+                                style: TextStyle(
+                                  fontFamily: "NexaBold",
+                                  fontSize: 22,
+                                  color: statusColor.withValues(alpha: 0.7),
+                                ),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'When project progress is made, updates will appear here.',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontFamily: "NexaRegular",
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddUpdateScreen(project: project),
+                                    ),
+                                  );
+                                },
+                                icon: Icon(
+                                  Icons.add_circle_outline,
+                                  color: statusColor,
+                                ),
+                                label: Text(
+                                  'Add First Update',
+                                  style: TextStyle(
+                                    fontFamily: "NexaBold",
+                                    color: statusColor,
+                                  ),
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: statusBackgroundColor,
+                                  elevation: 0,
+                                ),
+                              ),
+                            ],
                           ),
-                        ))
+                        )
                       : ListView.builder(
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),

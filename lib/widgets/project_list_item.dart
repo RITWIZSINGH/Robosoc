@@ -39,9 +39,9 @@ class ProjectListItem extends StatelessWidget {
         title: Text(
           project.title,
           style: const TextStyle(
-            fontFamily: "NexaBold",
-            fontWeight: FontWeight.bold,
-          ),
+              fontFamily: "NexaBold",
+              fontWeight: FontWeight.bold,
+              color: Colors.deepPurple),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -58,7 +58,7 @@ class ProjectListItem extends StatelessWidget {
               margin: const EdgeInsets.only(top: 4),
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               decoration: BoxDecoration(
-                color: _getBorderColor().withOpacity(0.1),
+                color: _getBorderColor().withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Text(

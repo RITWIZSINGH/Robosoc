@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, use_super_parameters, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/models/project_model.dart';
@@ -31,10 +33,10 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         CircleAvatar(
           radius: 60,
           backgroundColor: Colors.grey[300],
+          backgroundImage: _imageFile != null ? FileImage(_imageFile) : null,
           child: _imageFile == null
               ? const Icon(Icons.add_photo_alternate, size: 40)
               : null,
-          backgroundImage: _imageFile != null ? FileImage(_imageFile) : null,
         ),
         Positioned(
           bottom: 0,
