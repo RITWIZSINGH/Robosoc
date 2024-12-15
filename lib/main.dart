@@ -1,5 +1,5 @@
 // ignore_for_file: unused_import
-
+//flutter build apk --split-per-abi
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';

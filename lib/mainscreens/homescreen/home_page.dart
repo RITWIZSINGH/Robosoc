@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:provider/provider.dart';
@@ -14,13 +16,39 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _searchQuery = '';
+  String _userName = 'User';
+  String _profileImageUrl = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ComponentProvider>(context, listen: false).loadComponents();
+      _fetchUserProfile();
     });
+  }
+
+  void _fetchUserProfile() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final docSnapshot = await _firestore
+            .collection('profiles')
+            .doc(user.uid)
+            .get();
+
+        if (docSnapshot.exists) {
+          setState(() {
+            _userName = docSnapshot.data()?['name'] ?? 'User';
+            _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching user profile: $e');
+    }
   }
 
   @override
@@ -35,14 +63,14 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Hi!",
+                      Text("Hi!", 
                           style: TextStyle(
                               fontSize: 16, fontFamily: "NexaRegular")),
                       Text(
-                        "Welcome",
+                        "Welcome, $_userName",
                         style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -55,9 +83,14 @@ class _HomePageState extends State<HomePage> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const ProfileScreen())),
-                    child: const UserImage(
-                      imagePath: "assets/images/defaultPerson.png",
-                    ),
+                    child: _profileImageUrl.isNotEmpty
+                        ? CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(_profileImageUrl),
+                          )
+                        : const UserImage(
+                            imagePath: "assets/images/defaultPerson.png",
+                          ),
                   )
                 ],
               ),
@@ -143,13 +176,6 @@ class _HomePageState extends State<HomePage> {
                                 color: Color.fromARGB(255, 224, 75, 11),
                               ),
                             ),
-                            // Text(
-                            //   component.description,
-                            //   style: const TextStyle(
-                            //     fontSize: 14,
-                            //     color: Color.fromARGB(255, 224, 75, 11),
-                            //   ),
-                            // )
                           ],
                         ),
                       ),

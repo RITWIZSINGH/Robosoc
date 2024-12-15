@@ -1,10 +1,10 @@
-// ignore_for_file: use_super_parameters, library_private_types_in_public_api, use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/register_screen.dart';
+import 'package:robosoc/mainscreens/login_registerscreen/onboarding_screen.dart';
 import 'loading_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -29,18 +29,50 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => NavigationScreen()),
+        // Check if user profile exists
+        final userDoc = await FirebaseFirestore.instance
+            .collection('profiles')
+            .doc(userCredential.user!.uid)
+            .get();
+
+        if (!userDoc.exists) {
+          // If profile doesn't exist, navigate to onboarding
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+          );
+        } else {
+          // If profile exists, go to navigation screen
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => NavigationScreen()),
+          );
+        }
+      } on FirebaseAuthException catch (e) {
+        String errorMessage = 'Login failed';
+        if (e.code == 'user-not-found') {
+          errorMessage = 'No user found with this email';
+        } else if (e.code == 'wrong-password') {
+          errorMessage = 'Incorrect password';
+        }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(errorMessage),
+            backgroundColor: Colors.red,
+          ),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login failed: ${e.toString()}')),
+          SnackBar(
+            content: Text('An unexpected error occurred: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
         );
       } finally {
         if (mounted) {
@@ -124,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(24),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: Colors.black.withValues(alpha: 0.1),
+                                    color: Colors.black.withOpacity(0.1),
                                     blurRadius: 10,
                                     offset: const Offset(0, 4),
                                   ),
@@ -133,8 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Form(
                                 key: _formKey,
                                 child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
                                   children: [
                                     Container(
                                       height: 50,
@@ -148,8 +179,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(25),
+                                                borderRadius: BorderRadius.circular(25),
                                               ),
                                               child: const Center(
                                                 child: Text(
@@ -168,8 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const RegisterScreen(),
+                                                    builder: (context) => const RegisterScreen(),
                                                   ),
                                                 );
                                               },
@@ -202,8 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontFamily: "NexaRegular",
                                         ),
                                         border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(12),
                                         ),
                                         filled: true,
                                         fillColor: const Color(0xFFF5F5F5),
@@ -216,42 +244,40 @@ class _LoginScreenState extends State<LoginScreen> {
                                       },
                                     ),
                                     const SizedBox(height: 16),
-                                     TextFormField(
-                              controller: _passwordController,
-                              obscureText: !_isPasswordVisible, // Toggle visibility
-                              decoration: InputDecoration(
-                                hintText: 'Enter Password',
-                                hintStyle: const TextStyle(
-                                  fontFamily: "NexaRegular",
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                filled: true,
-                                fillColor: const Color(0xFFF5F5F5),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _isPasswordVisible
-                                        ? Icons.visibility
-                                        : Icons.visibility_off,
-                                    color: Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _isPasswordVisible =
-                                          !_isPasswordVisible; // Toggle state
-                                    });
-                                  },
-                                ),
-                              ),
-                              validator: (value) {
-                                if (value?.isEmpty ?? true) {
-                                  return 'Please enter your password';
-                                }
-                                return null;
-                              },
-                            ),
-
+                                    TextFormField(
+                                      controller: _passwordController,
+                                      obscureText: !_isPasswordVisible,
+                                      decoration: InputDecoration(
+                                        hintText: 'Enter Password',
+                                        hintStyle: const TextStyle(
+                                          fontFamily: "NexaRegular",
+                                        ),
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        filled: true,
+                                        fillColor: const Color(0xFFF5F5F5),
+                                        suffixIcon: IconButton(
+                                          icon: Icon(
+                                            _isPasswordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off,
+                                            color: Colors.grey,
+                                          ),
+                                          onPressed: () {
+                                            setState(() {
+                                              _isPasswordVisible = !_isPasswordVisible;
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                      validator: (value) {
+                                        if (value?.isEmpty ?? true) {
+                                          return 'Please enter your password';
+                                        }
+                                        return null;
+                                      },
+                                    ),
                                     Align(
                                       alignment: Alignment.centerRight,
                                       child: TextButton(
@@ -259,8 +285,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const ForgotPasswordScreen(),
+                                              builder: (context) => const ForgotPasswordScreen(),
                                             ),
                                           );
                                         },
@@ -279,11 +304,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: ElevatedButton(
                                         onPressed: _login,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor:
-                                              const Color(0xFFFFC700),
+                                          backgroundColor: const Color(0xFFFFC700),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(12),
                                           ),
                                         ),
                                         child: const Text(

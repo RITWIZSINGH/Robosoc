@@ -171,7 +171,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
                   child: _isUploading
                       ? CircularProgressIndicator()
                       : Text(
-                          'SAVE',
+                          'ADD COMPONENT',
                           style: TextStyle(fontFamily: "NexaBold"),
                         ),
                 ),

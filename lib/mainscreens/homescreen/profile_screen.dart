@@ -1,7 +1,12 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last, unused_field, unused_local_variable
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:typed_data';
-import 'package:image_picker/image_picker.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/models/component.dart';
 import 'package:robosoc/utilities/image_picker.dart';
@@ -16,158 +21,262 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   Uint8List? _image;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController roleController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  // selectImage
+  String _userName = '';
+  String _userRole = '';
+  String _profileImageUrl = '';
+  List<Component> _issuedComponents = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserProfile();
+    _fetchIssuedComponents();
+  }
+
+  void _fetchUserProfile() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final docSnapshot =
+            await _firestore.collection('profiles').doc(user.uid).get();
+
+        if (docSnapshot.exists) {
+          setState(() {
+            _userName = docSnapshot.data()?['name'] ?? '';
+            _userRole = docSnapshot.data()?['role'] ?? '';
+            _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching user profile: $e');
+    }
+  }
+
+  void _fetchIssuedComponents() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final querySnapshot = await _firestore
+            .collection('issued_components')
+            .where('userId', isEqualTo: user.uid)
+            .get();
+
+        setState(() {
+          _issuedComponents = querySnapshot.docs.map((doc) {
+            return Component(
+              name: doc['name'],
+              quantity: doc['quantity'],
+            );
+          }).toList();
+        });
+      }
+    } catch (e) {
+      print('Error fetching issued components: $e');
+    }
+  }
+
+  Future<void> _deleteOldProfileImage() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null && _profileImageUrl.isNotEmpty) {
+        final oldImageRef = _storage.refFromURL(_profileImageUrl);
+        await oldImageRef.delete();
+      }
+    } catch (e) {
+      print('Error deleting old profile image: $e');
+    }
+  }
+
   void selectImage() async {
-    Uint8List img = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = img;
-    });
+    Uint8List? img = await pickImage(ImageSource.gallery);
+    if (img != null) {
+      setState(() {
+        _image = img;
+      });
+      await _uploadProfileImage();
+    }
   }
 
-  // Saving data
-  void saveProfile() async {
-    String name = nameController.text;
-    String role = roleController.text;
-    // Code for saving the profile data (not fully implemented here)
+  Future<void> _uploadProfileImage() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null && _image != null) {
+        // Delete the old image first
+        if (_profileImageUrl.isNotEmpty) {
+          await _deleteOldProfileImage();
+        }
+
+        // Upload new image
+        final storageRef =
+            _storage.ref().child('profileImages').child('${user.uid}.jpg');
+
+        await storageRef.putData(_image!);
+        final downloadURL = await storageRef.getDownloadURL();
+
+        await _firestore
+            .collection('profiles')
+            .doc(user.uid)
+            .update({'photoURL': downloadURL});
+
+        setState(() {
+          _profileImageUrl = downloadURL;
+        });
+      }
+    } catch (e) {
+      print('Error uploading profile image: $e');
+    }
   }
 
-  final List<Component> _issuedComponents = [
-    Component(name: "Arduino", quantity: 5),
-    Component(name: "Bread Board", quantity: 2),
-    Component(name: "Jumper Wires", quantity: 10),
-    Component(name: "Arduino", quantity: 5),
-  ];
+  void _logout() {
+    _auth.signOut();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => LoginScreen()),
+        (route) => false);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(Icons.arrow_back_ios_new)),
-                const Text(
-                  "Profile",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-                IconButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => LoginScreen()),
-                          (route) => false);
-                    },
-                    icon: const Icon(Icons.logout))
-              ],
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Stack(
-              children: [
-                _image != null
-                    ? Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).colorScheme.secondary,
-                                width: 3),
-                            borderRadius: BorderRadius.circular(100)),
-                        child: CircleAvatar(
-                          radius: 30,
-                          backgroundImage: MemoryImage(_image!),
-                        ),
-                      )
-                    : Container(
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Theme.of(context).colorScheme.secondary,
-                                width: 3),
-                            borderRadius: BorderRadius.circular(100)),
-                        child: const CircleAvatar(
-                          radius: 30,
-                          backgroundImage:
-                              AssetImage("assets/images/defaultPerson.png"),
-                        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // App Bar
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.black),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                    Text(
+                      'My Profile',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NexaBold',
                       ),
-                _image != null
-                    ? SizedBox()
-                    : Positioned(
-                        top: 2,
-                        right: 3,
-                        child: IconButton(
-                          onPressed: selectImage,
-                          icon: Icon(
-                            size: 18,
-                            Icons.add_a_photo,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                        ),
-                      )
-              ],
-            ),
-            Column(
-              children: [
-                const Text(
-                  "Babu Rao",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.logout, color: Colors.red),
+                      onPressed: _logout,
+                    ),
+                  ],
                 ),
-                Text(
-                  "Coordinator",
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 20),
-                ),
-                (_issuedComponents.isEmpty)
-                    ? const SizedBox(
-                        child: Center(
-                          child: Text(
-                            "No component Issued...",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 98, 98, 98),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 25),
-                          ),
+              ),
+
+              // Profile Header
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 70,
+                          backgroundImage: _profileImageUrl.isNotEmpty
+                              ? NetworkImage(_profileImageUrl)
+                              : (_image != null
+                                      ? MemoryImage(_image!)
+                                      : AssetImage(
+                                          "assets/images/defaultPerson.png"))
+                                  as ImageProvider,
                         ),
-                      )
-                    : SafeArea(
-                        child: SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              children: [
-                                const Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Text(
-                                      "Currently Issued Components",
-                                      style: TextStyle(
-                                          color:
-                                              Color.fromARGB(255, 98, 98, 98),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
-                                    )),
-                                ..._issuedComponents.map((component) {
-                                  return IssuedCommponentCard(
-                                      component: component);
-                                })
-                              ],
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.yellow[700],
+                              shape: BoxShape.circle,
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.camera_alt,
+                                  color: Colors.white, size: 20),
+                              onPressed: selectImage,
                             ),
                           ),
-                        ),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: 15),
+                    Text(
+                      _userName,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'NexaBold',
                       ),
-              ],
-            )
-          ],
+                    ),
+                    Text(
+                      _userRole,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 16,
+                        fontFamily: 'NexaRegular',
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Issued Components Section
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: _issuedComponents.isEmpty
+                    ? Column(
+                        children: const [
+                          Icon(
+                            LucideIcons.cpu,
+                            size: 30,
+                            color: Colors.blueGrey,
+                          ),
+                          Text(
+                            'No Components Issued Yet',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 18,
+                              fontFamily: 'NexaRegular',
+                            ),
+                          ),
+                        ],
+                      )
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Issued Components',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'NexaBold',
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          ...List.generate(
+                            _issuedComponents.length,
+                            (index) => Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: IssuedCommponentCard(
+                                component: _issuedComponents[index],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );

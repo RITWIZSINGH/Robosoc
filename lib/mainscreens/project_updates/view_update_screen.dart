@@ -27,7 +27,7 @@ class ViewUpdateScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
-          update.title,
+          update.title.toUpperCase(),
           style: const TextStyle(
             color: Colors.amber,
             fontFamily: "NexaBold",

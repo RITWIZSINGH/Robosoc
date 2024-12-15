@@ -1,5 +1,7 @@
 // ignore_for_file: use_super_parameters, library_private_types_in_public_api, use_build_context_synchronously
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
@@ -19,6 +21,10 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
+  String _userName = 'User';
+  String _profileImageUrl = '';
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   @override
   void initState() {
@@ -31,7 +37,29 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         _searchQuery = _searchController.text.toLowerCase();
       });
     });
+    _fetchUserProfile();
   }
+  void _fetchUserProfile() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final docSnapshot = await _firestore
+            .collection('profiles')
+            .doc(user.uid)
+            .get();
+
+        if (docSnapshot.exists) {
+          setState(() {
+            _userName = docSnapshot.data()?['name'] ?? 'User';
+            _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      print('Error fetching user profile: $e');
+    }
+  }
+
 
   @override
   void dispose() {
@@ -57,34 +85,39 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi!",
-                              style: TextStyle(
-                                  fontSize: 16, fontFamily: "NexaRegular")),
-                          Text(
-                            "Welcome",
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "NexaBold"),
-                          ),
-                        ],
+                      Text("Hi!", 
+                          style: TextStyle(
+                              fontSize: 16, fontFamily: "NexaRegular")),
+                      Text(
+                        "Welcome, $_userName",
+                        style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: "NexaBold"),
                       ),
-                      GestureDetector(
-                        onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const ProfileScreen())),
-                        child: const UserImage(
-                          imagePath: "assets/images/defaultPerson.png",
-                        ),
-                      )
                     ],
                   ),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ProfileScreen())),
+                    child: _profileImageUrl.isNotEmpty
+                        ? CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(_profileImageUrl),
+                          )
+                        : const UserImage(
+                            imagePath: "assets/images/defaultPerson.png",
+                          ),
+                  )
+                ],
+              ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _searchController,

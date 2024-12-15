@@ -37,7 +37,7 @@ class ProjectListItem extends StatelessWidget {
           child: _buildProjectImage(),
         ),
         title: Text(
-          project.title,
+          project.title.toUpperCase(),
           style: const TextStyle(
               fontFamily: "NexaBold",
               fontWeight: FontWeight.bold,
