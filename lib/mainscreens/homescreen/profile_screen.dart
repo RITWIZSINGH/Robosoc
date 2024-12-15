@@ -24,6 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
+  bool _isUploading = false;
 
   String _userName = '';
   String _userRole = '';
@@ -97,8 +98,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (img != null) {
       setState(() {
         _image = img;
+        _isUploading = true;
       });
       await _uploadProfileImage();
+      setState(() {
+        _isUploading = false;
+      });
     }
   }
 
@@ -191,6 +196,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       : AssetImage(
                                           "assets/images/defaultPerson.png"))
                                   as ImageProvider,
+                          child: _isUploading
+                              ? Container(
+                                  width: 140,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black.withOpacity(0.5),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: CircularProgressIndicator(
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    ),
+                                  ),
+                                )
+                              : null,
                         ),
                         Positioned(
                           bottom: 0,
@@ -203,7 +224,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: IconButton(
                               icon: Icon(Icons.camera_alt,
                                   color: Colors.white, size: 20),
-                              onPressed: selectImage,
+                              onPressed: _isUploading ? null : selectImage,
                             ),
                           ),
                         )
