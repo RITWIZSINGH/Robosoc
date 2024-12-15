@@ -4,6 +4,8 @@ import 'package:robosoc/mainscreens/project_updates/add_update_screen.dart';
 import 'package:robosoc/mainscreens/project_updates/view_update_screen.dart';
 import 'package:robosoc/widgets/project_update_card.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:robosoc/utilities/project_provider.dart';
+import 'package:provider/provider.dart';
 
 class DetailedProjectScreen extends StatelessWidget {
   final Project project;
@@ -22,6 +24,78 @@ class DetailedProjectScreen extends StatelessWidget {
     }
   }
 
+  // Add this method to handle status update
+  void _updateProjectStatus(BuildContext context) async {
+    try {
+      // Show confirmation dialog
+      bool? confirm = await showDialog<bool>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(
+              'Update Project Status',
+              style: TextStyle(fontFamily: "NexaBold"),
+            ),
+            content: Text(
+              'Are you sure you want to mark this project as ${project.status == 'ongoing' ? 'completed' : 'ongoing'}?',
+              style: TextStyle(fontFamily: "NexaRegular"),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontFamily: "NexaRegular",
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(
+                  'Confirm',
+                  style: TextStyle(
+                    color: Colors.amber,
+                    fontFamily: "NexaBold",
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+
+      if (confirm == true) {
+        final newStatus = project.status == 'ongoing' ? 'completed' : 'ongoing';
+        await Provider.of<ProjectProvider>(context, listen: false)
+            .updateProjectStatus(project.id, newStatus);
+
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Project status updated successfully!',
+              style: TextStyle(fontFamily: "NexaRegular"),
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      // Show error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Failed to update project status: $e',
+            style: TextStyle(fontFamily: "NexaRegular"),
+          ),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,12 +105,26 @@ class DetailedProjectScreen extends StatelessWidget {
           child: Text(
             project.title.toUpperCase(),
             style: TextStyle(
-                color: Colors.amber,
-                fontFamily: "NexaBold",
-                fontWeight: FontWeight.w900),
+              color: Colors.amber,
+              fontFamily: "NexaBold",
+              fontWeight: FontWeight.w900,
+            ),
           ),
         ),
         actions: [
+          // Add status update button
+          IconButton(
+            icon: Icon(
+              project.status == 'ongoing'
+                  ? Icons.check_circle_outline
+                  : Icons.refresh,
+              color: Colors.amber,
+            ),
+            onPressed: () => _updateProjectStatus(context),
+            tooltip: project.status == 'ongoing'
+                ? 'Mark as Completed'
+                : 'Mark as Ongoing',
+          ),
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
@@ -89,6 +177,29 @@ class DetailedProjectScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold, fontFamily: "NexaBold"),
                   ),
                   const SizedBox(height: 8),
+                  // Add this widget inside the Column in the Padding widget,
+// after the project title and before the description
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: project.status == 'ongoing'
+                          ? Colors.amber.withOpacity(0.2)
+                          : Colors.green.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      project.status.toUpperCase(),
+                      style: TextStyle(
+                        color: project.status == 'ongoing'
+                            ? Colors.amber
+                            : Colors.green,
+                        fontFamily: "NexaBold",
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
                   Text(
                     project.description,
                     style: Theme.of(context)

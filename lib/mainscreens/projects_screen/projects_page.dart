@@ -28,6 +28,9 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double sh = MediaQuery.of(context).size.height;
+    double sw = MediaQuery.of(context).size.width;
+
     return Scaffold(
       // backgroundColor: Colors.white,s
       body: SafeArea(
@@ -89,13 +92,13 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 ),
               ),
               const SizedBox(height: 10),
-              Expanded(
+              Container(
+                height: sh / 3,
                 child: Consumer<ProjectProvider>(
                   builder: (context, projectProvider, child) {
                     if (projectProvider.isLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
-
                     final ongoingProjects = projectProvider.projects
                         .where((p) => p.status == 'ongoing')
                         .toList();

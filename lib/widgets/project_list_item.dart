@@ -13,14 +13,23 @@ class ProjectListItem extends StatelessWidget {
     required this.onTap,
   }) : super(key: key);
 
+  // Extract color logic to a separate method for better readability
+  Color _getBorderColor() {
+    return project.status == 'completed' ? Colors.green : Colors.amber;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.white,
-          border: Border.all(color: Colors.amber)),
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        border: Border.all(
+          color: _getBorderColor(),
+          width: 1.5, // Optional: make the border slightly more prominent
+        ),
+      ),
       child: ListTile(
         onTap: onTap,
         leading: ClipRRect(
@@ -34,16 +43,38 @@ class ProjectListItem extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(
-          'Team Leader: ${project.teamLeader}',
-          style: TextStyle(
-            fontFamily: "NexaRegular",
-            color: Colors.grey[600],
-          ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Team Leader: ${project.teamLeader}',
+              style: TextStyle(
+                fontFamily: "NexaRegular",
+                color: Colors.grey[600],
+              ),
+            ),
+            // Add status indicator
+            Container(
+              margin: const EdgeInsets.only(top: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: _getBorderColor().withOpacity(0.1),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                project.status.toUpperCase(),
+                style: TextStyle(
+                  fontSize: 10,
+                  fontFamily: "NexaBold",
+                  color: _getBorderColor(),
+                ),
+              ),
+            ),
+          ],
         ),
-        trailing: const Icon(
+        trailing: Icon(
           Icons.chevron_right,
-          color: Colors.grey,
+          color: _getBorderColor(),
         ),
       ),
     );
@@ -79,6 +110,7 @@ class ProjectListItem extends StatelessWidget {
                         ? loadingProgress.cumulativeBytesLoaded /
                             loadingProgress.expectedTotalBytes!
                         : null,
+                    color: _getBorderColor(), // Match the border color
                   ),
                 ),
               );

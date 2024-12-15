@@ -82,4 +82,19 @@ class ProjectProvider with ChangeNotifier {
       rethrow;
     }
   }
+  // Add this method to ProjectProvider class
+Future<void> updateProjectStatus(String projectId, String newStatus) async {
+  try {
+    await _firestore
+        .collection('projects')
+        .doc(projectId)
+        .update({'status': newStatus});
+    await fetchProjects(); // Refresh the projects list
+    notifyListeners();
+  } catch (e) {
+    print('Error updating project status: $e');
+    rethrow;
+  }
+}
+
 }

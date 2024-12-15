@@ -15,7 +15,7 @@ Future<void> main() async {
   await Firebase.initializeApp( 
     name: "robosoc-app",
     options: const FirebaseOptions(
-      apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",
+      apiKey: "AIzaSyAmvK_0bNoYtAZQNNA48tDXcVyYtSvWf6Q",  
       authDomain: "robosoc-app.firebaseapp.com",
       projectId: "robosoc-app",
       storageBucket: "robosoc-app.appspot.com",
