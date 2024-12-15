@@ -8,6 +8,7 @@ import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:robosoc/models/project_model.dart';
 import 'package:robosoc/utilities/project_provider.dart';
 import 'package:robosoc/mainscreens/projects_screen/detailed_project_viewscreen.dart';
+import 'package:robosoc/widgets/animated_profile_image.dart';
 import 'package:robosoc/widgets/project_list_item.dart';
 import 'package:robosoc/widgets/user_image.dart';
 
@@ -25,6 +26,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
   String _profileImageUrl = '';
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -37,16 +39,21 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
         _searchQuery = _searchController.text.toLowerCase();
       });
     });
-    _fetchUserProfile();
+    _loadUserProfile();
   }
-  void _fetchUserProfile() async {
+
+  Future<void> _loadUserProfile() async {
+    setState(() => _isLoading = true);
+    await _fetchUserProfile();
+    setState(() => _isLoading = false);
+  }
+
+  Future<void> _fetchUserProfile() async {
     try {
       final user = _auth.currentUser;
       if (user != null) {
-        final docSnapshot = await _firestore
-            .collection('profiles')
-            .doc(user.uid)
-            .get();
+        final docSnapshot =
+            await _firestore.collection('profiles').doc(user.uid).get();
 
         if (docSnapshot.exists) {
           setState(() {
@@ -59,7 +66,6 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
       print('Error fetching user profile: $e');
     }
   }
-
 
   @override
   void dispose() {
@@ -85,39 +91,34 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Hi!", 
-                          style: TextStyle(
-                              fontSize: 16, fontFamily: "NexaRegular")),
-                      Text(
-                        "Welcome, $_userName",
-                        style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "NexaBold"),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Hi!",
+                              style: TextStyle(
+                                  fontSize: 16, fontFamily: "NexaRegular")),
+                          Text(
+                            "Welcome, $_userName",
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "NexaBold"),
+                          ),
+                        ],
                       ),
+                      AnimatedProfileImage(
+                        profileImageUrl: _profileImageUrl,
+                        isLoading: _isLoading,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ProfileScreen()),
+                        ),
+                      )
                     ],
                   ),
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfileScreen())),
-                    child: _profileImageUrl.isNotEmpty
-                        ? CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(_profileImageUrl),
-                          )
-                        : const UserImage(
-                            imagePath: "assets/images/defaultPerson.png",
-                          ),
-                  )
-                ],
-              ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _searchController,

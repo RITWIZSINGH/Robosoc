@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/component_provider.dart';
+import 'package:robosoc/widgets/animated_profile_image.dart';
+import 'package:robosoc/widgets/loading_states.dart';
+import 'package:robosoc/widgets/shimmer_loading.dart';
 import 'package:robosoc/widgets/user_image.dart';
 import 'package:robosoc/mainscreens/homescreen/component_detail_screen.dart';
 
@@ -20,24 +23,29 @@ class _HomePageState extends State<HomePage> {
   String _profileImageUrl = '';
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ComponentProvider>(context, listen: false).loadComponents();
-      _fetchUserProfile();
+      _loadUserProfile();
     });
   }
 
-  void _fetchUserProfile() async {
+  Future<void> _loadUserProfile() async {
+    setState(() => _isLoading = true);
+    await _fetchUserProfile();
+    setState(() => _isLoading = false);
+  }
+
+  Future<void> _fetchUserProfile() async {
     try {
       final user = _auth.currentUser;
       if (user != null) {
-        final docSnapshot = await _firestore
-            .collection('profiles')
-            .doc(user.uid)
-            .get();
+        final docSnapshot =
+            await _firestore.collection('profiles').doc(user.uid).get();
 
         if (docSnapshot.exists) {
           setState(() {
@@ -63,34 +71,31 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Hi!", 
-                          style: TextStyle(
-                              fontSize: 16, fontFamily: "NexaRegular")),
-                      Text(
-                        "Welcome, $_userName",
-                        style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: "NexaBold"),
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
+                  _isLoading
+                      ? const ProfileLoadingState()
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("Hi!",
+                                style: TextStyle(
+                                    fontSize: 16, fontFamily: "NexaRegular")),
+                            Text(
+                              "Welcome, $_userName",
+                              style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: "NexaBold"),
+                            ),
+                          ],
+                        ),
+                  AnimatedProfileImage(
+                    profileImageUrl: _profileImageUrl,
+                    isLoading: _isLoading,
                     onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfileScreen())),
-                    child: _profileImageUrl.isNotEmpty
-                        ? CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(_profileImageUrl),
-                          )
-                        : const UserImage(
-                            imagePath: "assets/images/defaultPerson.png",
-                          ),
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfileScreen()),
+                    ),
                   )
                 ],
               ),
