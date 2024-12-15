@@ -11,6 +11,7 @@ import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/models/component.dart';
 import 'package:robosoc/utilities/image_picker.dart';
 import 'package:robosoc/widgets/issued_commponent_card.dart';
+import 'package:robosoc/widgets/profile_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -185,50 +186,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Column(
                   children: [
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          radius: 70,
-                          backgroundImage: _profileImageUrl.isNotEmpty
-                              ? NetworkImage(_profileImageUrl)
-                              : (_image != null
-                                      ? MemoryImage(_image!)
-                                      : AssetImage(
-                                          "assets/images/defaultPerson.png"))
-                                  as ImageProvider,
-                          child: _isUploading
-                              ? Container(
-                                  width: 140,
-                                  height: 140,
-                                  decoration: BoxDecoration(
-                                    color: Colors.black.withOpacity(0.5),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
-                                    ),
-                                  ),
-                                )
-                              : null,
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.yellow[700],
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              icon: Icon(Icons.camera_alt,
-                                  color: Colors.white, size: 20),
-                              onPressed: _isUploading ? null : selectImage,
-                            ),
-                          ),
-                        )
-                      ],
+                    ProfileImage(
+                      profileImageUrl: _profileImageUrl,
+                      selectedImage: _image,
+                      isUploading: _isUploading,
+                      onSelectImage: selectImage,
+                      isUploadingDisabled: _isUploading,
                     ),
                     SizedBox(height: 15),
                     Text(
