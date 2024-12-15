@@ -15,6 +15,37 @@ class DetailedProjectScreen extends StatelessWidget {
     required this.project,
   }) : super(key: key);
 
+  // Color scheme based on project status
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'ongoing':
+        return Colors.amber;
+      case 'completed':
+        return Colors.green;
+      case 'paused':
+        return Colors.orange;
+      case 'not started':
+        return Colors.grey;
+      default:
+        return Colors.blue;
+    }
+  }
+
+  Color _getStatusBackgroundColor(String status) {
+    switch (status) {
+      case 'ongoing':
+        return Colors.amber.withValues(alpha: 0.2);
+      case 'completed':
+        return Colors.green.withValues(alpha: 0.2);
+      case 'paused':
+        return Colors.orange.withValues(alpha: 0.2);
+      case 'not started':
+        return Colors.grey.withValues(alpha: 0.2);
+      default:
+        return Colors.blue.withValues(alpha: 0.2);
+    }
+  }
+
   Future<void> _launchProjectLink() async {
     final Uri url = Uri.parse(project.link);
     if (await canLaunchUrl(url)) {
@@ -24,21 +55,23 @@ class DetailedProjectScreen extends StatelessWidget {
     }
   }
 
-  // Add this method to handle status update
   void _updateProjectStatus(BuildContext context) async {
     try {
-      // Show confirmation dialog
       bool? confirm = await showDialog<bool>(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text(
               'Update Project Status',
-              style: TextStyle(fontFamily: "NexaBold"),
+              style: TextStyle(
+                  fontFamily: "NexaBold",
+                  color: _getStatusColor(project.status)),
             ),
             content: Text(
               'Are you sure you want to mark this project as ${project.status == 'ongoing' ? 'completed' : 'ongoing'}?',
-              style: TextStyle(fontFamily: "NexaRegular"),
+              style: TextStyle(
+                  fontFamily: "NexaRegular",
+                  color: _getStatusColor(project.status)),
             ),
             actions: [
               TextButton(
@@ -56,7 +89,7 @@ class DetailedProjectScreen extends StatelessWidget {
                 child: Text(
                   'Confirm',
                   style: TextStyle(
-                    color: Colors.amber,
+                    color: _getStatusColor(project.status),
                     fontFamily: "NexaBold",
                   ),
                 ),
@@ -71,14 +104,14 @@ class DetailedProjectScreen extends StatelessWidget {
         await Provider.of<ProjectProvider>(context, listen: false)
             .updateProjectStatus(project.id, newStatus);
 
-        // Show success message
+        // Show success message with status-specific color
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
               'Project status updated successfully!',
               style: TextStyle(fontFamily: "NexaRegular"),
             ),
-            backgroundColor: Colors.green,
+            backgroundColor: _getStatusColor(newStatus),
           ),
         );
       }
@@ -98,6 +131,9 @@ class DetailedProjectScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final statusColor = _getStatusColor(project.status);
+    final statusBackgroundColor = _getStatusBackgroundColor(project.status);
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -105,20 +141,20 @@ class DetailedProjectScreen extends StatelessWidget {
           child: Text(
             project.title.toUpperCase(),
             style: TextStyle(
-              color: Colors.amber,
+              color: statusColor,
               fontFamily: "NexaBold",
               fontWeight: FontWeight.w900,
             ),
           ),
         ),
         actions: [
-          // Add status update button
+          // Status update button with dynamic color
           IconButton(
             icon: Icon(
               project.status == 'ongoing'
                   ? Icons.check_circle_outline
                   : Icons.refresh,
-              color: Colors.amber,
+              color: statusColor,
             ),
             onPressed: () => _updateProjectStatus(context),
             tooltip: project.status == 'ongoing'
@@ -142,10 +178,10 @@ class DetailedProjectScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image with error handling
+            // Image with dynamic border color
             Container(
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.amber, width: 4),
+                  border: Border.all(color: statusColor, width: 4),
                   borderRadius: BorderRadius.circular(19)),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15),
@@ -174,25 +210,22 @@ class DetailedProjectScreen extends StatelessWidget {
                   Text(
                     project.title.toUpperCase(),
                     style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold, fontFamily: "NexaBold"),
+                        fontWeight: FontWeight.bold,
+                        fontFamily: "NexaBold",
+                        color: statusColor),
                   ),
                   const SizedBox(height: 8),
-                  // Add this widget inside the Column in the Padding widget,
-// after the project title and before the description
+                  // Status chip with dynamic colors
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: project.status == 'ongoing'
-                          ? Colors.amber.withOpacity(0.2)
-                          : Colors.green.withOpacity(0.2),
+                      color: statusBackgroundColor,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       project.status.toUpperCase(),
                       style: TextStyle(
-                        color: project.status == 'ongoing'
-                            ? Colors.amber
-                            : Colors.green,
+                        color: statusColor,
                         fontFamily: "NexaBold",
                         fontSize: 12,
                       ),
@@ -211,14 +244,14 @@ class DetailedProjectScreen extends StatelessWidget {
                   if (project.link.isNotEmpty)
                     ElevatedButton.icon(
                       onPressed: _launchProjectLink,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.link,
-                        color: Colors.amber,
+                        color: statusColor,
                       ),
-                      label: const Text(
+                      label: Text(
                         'View Project',
                         style: TextStyle(
-                            color: Colors.amber, fontFamily: "NexaBold"),
+                            color: statusColor, fontFamily: "NexaBold"),
                       ),
                     ),
                   const SizedBox(height: 24),
@@ -227,14 +260,18 @@ class DetailedProjectScreen extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: "NexaBold",
                       fontSize: 26,
+                      color: statusColor,
                     ),
                   ),
                   const SizedBox(height: 8),
                   project.updates.isEmpty
-                      ? const Center(
+                      ? Center(
                           child: Text(
                           'No updates yet',
-                          style: TextStyle(fontFamily: "NexaRegular"),
+                          style: TextStyle(
+                            fontFamily: "NexaRegular",
+                            // color: statusColor.withValues(alpha: 0.6),
+                          ),
                         ))
                       : ListView.builder(
                           shrinkWrap: true,

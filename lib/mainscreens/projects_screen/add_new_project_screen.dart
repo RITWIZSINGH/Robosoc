@@ -16,9 +16,13 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
   String _title = '';
   String _description = '';
   String _link = '';
-  String _teamLeader = ''; // New field for team leader
+  String _teamLeader = '';
   dynamic _imageFile;
   bool _isUploading = false;
+
+  // New variable for project status
+  String _projectStatus = 'ongoing'; // Default value
+  final List<String> _statusOptions = ['ongoing', 'completed'];
 
   Widget _buildImagePreview() {
     return Stack(
@@ -62,7 +66,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
           '- Google Drive Link\n'
           '- Description\n'
           '- Team Leader Name\n'
-          '- Project Image',
+          '- Project Image\n'
+          '- Project Status',
           style: TextStyle(fontFamily: "NexaRegular"),
         ),
         actions: [
@@ -93,7 +98,8 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         );
 
         final newProject = Project(
-          status: '',
+          // Use the selected status
+          status: _projectStatus,
           teamLeader: _teamLeader,
           id: '',
           title: _title,
@@ -171,6 +177,32 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
                   onSaved: (value) => _teamLeader = value!,
                 ),
                 const SizedBox(height: 20),
+                // New Dropdown for Project Status
+                DropdownButtonFormField<String>(
+                  decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.grey.shade200,
+                    labelText: 'Project Status',
+                    labelStyle: const TextStyle(fontFamily: "NexaBold"),
+                    border: const OutlineInputBorder(),
+                  ),
+                  value: _projectStatus,
+                  items: _statusOptions.map((status) {
+                    return DropdownMenuItem(
+                      value: status,
+                      child: Text(
+                        status.capitalize(),
+                        style: const TextStyle(fontFamily: "NexaRegular"),
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _projectStatus = value!;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
                 TextFormField(
                   decoration: InputDecoration(
                     filled: true,
@@ -222,5 +254,12 @@ class _AddProjectScreenState extends State<AddProjectScreen> {
         ),
       ),
     );
+  }
+}
+
+// Extension to capitalize first letter of a string
+extension StringExtension on String {
+  String capitalize() {
+    return "${this[0].toUpperCase()}${substring(1)}";
   }
 }
