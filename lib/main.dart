@@ -9,6 +9,7 @@ import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:robosoc/utilities/project_provider.dart';
+import 'package:robosoc/utilities/user_profile_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +54,7 @@ class RobosocApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => ComponentProvider()),
         ChangeNotifierProvider(create: (context) => ProjectProvider()),
+    ChangeNotifierProvider(create: (context) => UserProfileProvider()), 
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
