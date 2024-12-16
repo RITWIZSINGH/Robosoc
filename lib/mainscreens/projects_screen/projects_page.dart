@@ -1,5 +1,3 @@
-// ignore_for_file: use_super_parameters, library_private_types_in_public_api, use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:robosoc/models/project_model.dart';
 import 'package:robosoc/utilities/project_provider.dart';
+import 'package:robosoc/utilities/user_profile_provider.dart'; // New provider
 import 'package:robosoc/mainscreens/projects_screen/detailed_project_viewscreen.dart';
 import 'package:robosoc/widgets/animated_profile_image.dart';
 import 'package:robosoc/widgets/project_list_item.dart';
-import 'package:robosoc/widgets/user_image.dart';
 
 class ProjectsScreen extends StatefulWidget {
   const ProjectsScreen({Key? key}) : super(key: key);
@@ -22,49 +20,20 @@ class ProjectsScreen extends StatefulWidget {
 class _ProjectsScreenState extends State<ProjectsScreen> {
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  String _userName = 'User';
-  String _profileImageUrl = '';
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    Future.microtask(() =>
-        Provider.of<ProjectProvider>(context, listen: false).fetchProjects());
+    Future.microtask(() {
+      Provider.of<ProjectProvider>(context, listen: false).fetchProjects();
+      Provider.of<UserProfileProvider>(context, listen: false).loadUserProfile();
+    });
 
     _searchController.addListener(() {
       setState(() {
         _searchQuery = _searchController.text.toLowerCase();
       });
     });
-    _loadUserProfile();
-  }
-
-  Future<void> _loadUserProfile() async {
-    setState(() => _isLoading = true);
-    await _fetchUserProfile();
-    setState(() => _isLoading = false);
-  }
-
-  Future<void> _fetchUserProfile() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        final docSnapshot =
-            await _firestore.collection('profiles').doc(user.uid).get();
-
-        if (docSnapshot.exists) {
-          setState(() {
-            _userName = docSnapshot.data()?['name'] ?? 'User';
-            _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
-          });
-        }
-      }
-    } catch (e) {
-      print('Error fetching user profile: $e');
-    }
   }
 
   @override
@@ -82,8 +51,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     return Scaffold(
       body: SafeArea(
         child: GestureDetector(
-          onTap: () => FocusScope.of(context)
-              .unfocus(), // Dismiss keyboard when tapping outside
+          onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
@@ -93,29 +61,37 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi!",
-                              style: TextStyle(
-                                  fontSize: 16, fontFamily: "NexaRegular")),
-                          Text(
-                            "Welcome, $_userName",
-                            style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: "NexaBold"),
-                          ),
-                        ],
+                      Consumer<UserProfileProvider>(
+                        builder: (context, userProvider, child) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Hi!",
+                                  style: TextStyle(
+                                      fontSize: 16, fontFamily: "NexaRegular")),
+                              Text(
+                                "Welcome, ${userProvider.userName}",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: "NexaBold"),
+                              ),
+                            ],
+                          );
+                        },
                       ),
-                      AnimatedProfileImage(
-                        profileImageUrl: _profileImageUrl,
-                        isLoading: _isLoading,
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const ProfileScreen()),
-                        ),
+                      Consumer<UserProfileProvider>(
+                        builder: (context, userProvider, child) {
+                          return AnimatedProfileImage(
+                            profileImageUrl: userProvider.profileImageUrl,
+                            isLoading: userProvider.isLoading,
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ProfileScreen()),
+                            ),
+                          );
+                        },
                       )
                     ],
                   ),

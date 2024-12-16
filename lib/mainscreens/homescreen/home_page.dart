@@ -3,11 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:robosoc/utilities/user_profile_provider.dart'; // New provider
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:robosoc/widgets/animated_profile_image.dart';
 import 'package:robosoc/widgets/loading_states.dart';
-import 'package:robosoc/widgets/shimmer_loading.dart';
-import 'package:robosoc/widgets/user_image.dart';
 import 'package:robosoc/mainscreens/homescreen/component_detail_screen.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,44 +18,14 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _searchQuery = '';
-  String _userName = 'User';
-  String _profileImageUrl = '';
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ComponentProvider>(context, listen: false).loadComponents();
-      _loadUserProfile();
+      Provider.of<UserProfileProvider>(context, listen: false).loadUserProfile();
     });
-  }
-
-  Future<void> _loadUserProfile() async {
-    setState(() => _isLoading = true);
-    await _fetchUserProfile();
-    setState(() => _isLoading = false);
-  }
-
-  Future<void> _fetchUserProfile() async {
-    try {
-      final user = _auth.currentUser;
-      if (user != null) {
-        final docSnapshot =
-            await _firestore.collection('profiles').doc(user.uid).get();
-
-        if (docSnapshot.exists) {
-          setState(() {
-            _userName = docSnapshot.data()?['name'] ?? 'User';
-            _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
-          });
-        }
-      }
-    } catch (e) {
-      print('Error fetching user profile: $e');
-    }
   }
 
   @override
@@ -71,31 +40,40 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _isLoading
-                      ? const ProfileLoadingState()
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Hi!",
-                                style: TextStyle(
-                                    fontSize: 16, fontFamily: "NexaRegular")),
-                            Text(
-                              "Welcome, $_userName",
+                  Consumer<UserProfileProvider>(
+                    builder: (context, userProvider, child) {
+                      if (userProvider.isLoading) {
+                        return const ProfileLoadingState();
+                      }
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Hi!",
                               style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: "NexaBold"),
-                            ),
-                          ],
+                                  fontSize: 16, fontFamily: "NexaRegular")),
+                          Text(
+                            "Welcome, ${userProvider.userName}",
+                            style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: "NexaBold"),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  Consumer<UserProfileProvider>(
+                    builder: (context, userProvider, child) {
+                      return AnimatedProfileImage(
+                        profileImageUrl: userProvider.profileImageUrl,
+                        isLoading: userProvider.isLoading,
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const ProfileScreen()),
                         ),
-                  AnimatedProfileImage(
-                    profileImageUrl: _profileImageUrl,
-                    isLoading: _isLoading,
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ProfileScreen()),
-                    ),
+                      );
+                    },
                   )
                 ],
               ),
