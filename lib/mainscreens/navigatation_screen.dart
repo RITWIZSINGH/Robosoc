@@ -1,5 +1,3 @@
-// ignore_for_file: unused_import
-
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/homescreen/home_page.dart';
 import 'package:robosoc/mainscreens/issuehistory/issue_history.dart';
@@ -8,6 +6,7 @@ import 'package:robosoc/mainscreens/projects_screen/projects_page.dart';
 import 'package:robosoc/mainscreens/homescreen/add_new_component_screen.dart';
 import 'package:robosoc/mainscreens/momscreen/new_mom.dart';
 import 'package:robosoc/mainscreens/projects_screen/add_new_project_screen.dart';
+import 'package:robosoc/utilities/page_transitions.dart'; // Import the transitions
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -17,49 +16,68 @@ class NavigationScreen extends StatefulWidget {
 }
 
 class _NavigationScreenState extends State<NavigationScreen> {
+  late PageController _pageController;
   int currentIndex = 0;
   final List<Widget> pages = [
-    HomePage(),
-    ProjectsScreen(),
-    IssueHistory(),
-    MOMPage(),
+    const HomePage(),
+    const ProjectsScreen(),
+    const IssueHistory(),
+    const MOMPage(),
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: currentIndex);
+  }
 
   void changePage(int index) {
     setState(() {
       currentIndex = index;
+      _pageController.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(child: pages[currentIndex]),
+      body: SafeArea(
+        child: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              currentIndex = index;
+            });
+          },
+          children: pages,
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         elevation: 12,
         shape: const StadiumBorder(),
         onPressed: () {
-          if (currentIndex == 0) {
+          Widget? destinationScreen;
+          switch (currentIndex) {
+            case 0:
+              destinationScreen = const AddNewComponentScreen();
+              break;
+            case 1:
+              destinationScreen = const AddProjectScreen();
+              break;
+            case 3:
+              destinationScreen = const MomForm();
+              break;
+          }
+
+          if (destinationScreen != null) {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const AddNewComponentScreen(),
-              ),
-            );
-          } else if (currentIndex == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => MomForm(),
-              ),
-            );
-          } else if (currentIndex == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddProjectScreen(),
-              ),
+              SlideRightRoute(page: destinationScreen),
             );
           }
         },
@@ -96,5 +114,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }

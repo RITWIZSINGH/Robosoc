@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:robosoc/mainscreens/momscreen/mom_details_screen.dart';
 import 'package:robosoc/models/mom.dart';
+import 'package:robosoc/utilities/page_transitions.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart';
 import 'package:robosoc/widgets/animated_profile_image.dart';
 import 'package:robosoc/widgets/mom_card/mom_card.dart';
@@ -76,10 +77,8 @@ class _MOMPageState extends State<MOMPage> {
 
     // Function to fetch MOM documents from Firestore and convert them to Mom objects
     Stream<List<Mom>> fetchMomList() {
-      return firestore.collection('moms').snapshots().map((snapshot) => snapshot
-          .docs
-          .map((doc) => Mom.fromMap(doc.data(), doc.id))
-          .toList());
+      return firestore.collection('moms').snapshots().map((snapshot) =>
+          snapshot.docs.map((doc) => Mom.fromMap(doc.data(), doc.id)).toList());
     }
 
     return Scaffold(
@@ -197,7 +196,7 @@ class _MOMPageState extends State<MOMPage> {
                               Text(
                                 "MEET\nINGS",
                                 style: TextStyle(
-                                  color: 
+                                  color:
                                       Theme.of(context).colorScheme.secondary,
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
@@ -216,10 +215,8 @@ class _MOMPageState extends State<MOMPage> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        MomDetailsScreen(mom: mom),
-                                  ),
+                                  SlideRightRoute(
+                                      page: MomDetailsScreen(mom: mom)),
                                 );
                               },
                               child: MomCard(mom: mom),

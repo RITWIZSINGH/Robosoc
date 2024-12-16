@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:robosoc/models/mom.dart';
 import 'package:robosoc/mainscreens/momscreen/new_mom.dart';
+import 'package:robosoc/utilities/page_transitions.dart';
 import 'package:robosoc/widgets/mom_details/detail_header.dart';
 import 'package:robosoc/widgets/mom_details/detail_card.dart';
 import 'package:robosoc/utilities/date_formatter.dart';
@@ -42,9 +43,7 @@ class MomDetailsScreen extends StatelessWidget {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => MomForm(mom: mom),
-            ),
+            SlideRightRoute(page: MomForm(mom: mom)),
           );
         },
         backgroundColor: Theme.of(context).colorScheme.secondary,
