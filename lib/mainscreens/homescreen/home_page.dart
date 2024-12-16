@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:robosoc/utilities/page_transitions.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart'; // New provider
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:robosoc/widgets/animated_profile_image.dart';
@@ -121,8 +122,8 @@ class _HomePageState extends State<HomePage> {
                     return GestureDetector(
                       onTap: () => Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) =>
+                          FadeRoute(
+                              page:
                                   ComponentDetailScreen(component: component))),
                       child: Container(
                         decoration: BoxDecoration(

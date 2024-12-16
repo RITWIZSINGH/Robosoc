@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:robosoc/models/project_model.dart';
+import 'package:robosoc/utilities/page_transitions.dart';
 import 'package:robosoc/utilities/project_provider.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart'; // New provider
 import 'package:robosoc/mainscreens/projects_screen/detailed_project_viewscreen.dart';
@@ -26,7 +27,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     super.initState();
     Future.microtask(() {
       Provider.of<ProjectProvider>(context, listen: false).fetchProjects();
-      Provider.of<UserProfileProvider>(context, listen: false).loadUserProfile();
+      Provider.of<UserProfileProvider>(context, listen: false)
+          .loadUserProfile();
     });
 
     _searchController.addListener(() {
@@ -139,8 +141,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailedProjectScreen(
+                                  FadeRoute(
+                                    page: DetailedProjectScreen(
                                       project: ongoingProjects[index],
                                     ),
                                   ),
@@ -179,8 +181,8 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                             onTap: () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailedProjectScreen(
+                                FadeRoute(
+                                  page: DetailedProjectScreen(
                                     project: completedProjects[index],
                                   ),
                                 ),

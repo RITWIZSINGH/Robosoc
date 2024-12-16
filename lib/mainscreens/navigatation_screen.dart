@@ -6,7 +6,7 @@ import 'package:robosoc/mainscreens/projects_screen/projects_page.dart';
 import 'package:robosoc/mainscreens/homescreen/add_new_component_screen.dart';
 import 'package:robosoc/mainscreens/momscreen/new_mom.dart';
 import 'package:robosoc/mainscreens/projects_screen/add_new_project_screen.dart';
-import 'package:robosoc/utilities/page_transitions.dart'; // Import the transitions
+import 'package:robosoc/utilities/page_transitions.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -28,7 +28,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: currentIndex);
+    _pageController = PageController(
+      initialPage: currentIndex,
+      viewportFraction: 1.0, // Ensures full page view
+    );
   }
 
   void changePage(int index) {
@@ -36,8 +39,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
       currentIndex = index;
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeIn,
+        duration: const Duration(milliseconds: 450), // Slightly longer duration
+        curve: Curves.fastLinearToSlowEaseIn, // Smoother curve
       );
     });
   }
@@ -46,14 +49,32 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: PageView(
+        child: PageView.builder(
           controller: _pageController,
+          itemCount: pages.length,
+          physics: const BouncingScrollPhysics(), // Adds a bouncy effect
           onPageChanged: (index) {
             setState(() {
               currentIndex = index;
             });
           },
-          children: pages,
+          itemBuilder: (context, index) {
+            return AnimatedBuilder(
+              animation: _pageController,
+              builder: (context, child) {
+                double value = 1.0;
+                if (_pageController.position.haveDimensions) {
+                  value = _pageController.page! - index;
+                  value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+                }
+                return Transform.scale(
+                  scale: Curves.easeOut.transform(value),
+                  child: child,
+                );
+              },
+              child: pages[index],
+            );
+          },
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

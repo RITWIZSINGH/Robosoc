@@ -215,8 +215,7 @@ class _MOMPageState extends State<MOMPage> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  SlideRightRoute(
-                                      page: MomDetailsScreen(mom: mom)),
+                                  FadeRoute(page: MomDetailsScreen(mom: mom)),
                                 );
                               },
                               child: MomCard(mom: mom),

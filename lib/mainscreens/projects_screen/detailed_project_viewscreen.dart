@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:robosoc/models/project_model.dart';
 import 'package:robosoc/mainscreens/project_updates/add_update_screen.dart';
 import 'package:robosoc/mainscreens/project_updates/view_update_screen.dart';
+import 'package:robosoc/utilities/page_transitions.dart';
 import 'package:robosoc/widgets/project_update_card.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:robosoc/utilities/project_provider.dart';
@@ -171,8 +172,8 @@ class DetailedProjectScreen extends StatelessWidget {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                  builder: (context) => AddUpdateScreen(project: project),
+                SlideRightRoute(
+                  page: AddUpdateScreen(project: project),
                 ),
               );
             },
@@ -302,9 +303,8 @@ class DetailedProjectScreen extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          AddUpdateScreen(project: project),
+                                    SlideRightRoute(
+                                      page: AddUpdateScreen(project: project),
                                     ),
                                   );
                                 },
@@ -338,8 +338,8 @@ class DetailedProjectScreen extends StatelessWidget {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewUpdateScreen(
+                                  FadeRoute(
+                                    page: ViewUpdateScreen(
                                       update: update,
                                     ),
                                   ),
