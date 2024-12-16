@@ -24,7 +24,8 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ComponentProvider>(context, listen: false).loadComponents();
-      Provider.of<UserProfileProvider>(context, listen: false).loadUserProfile();
+      Provider.of<UserProfileProvider>(context, listen: false)
+          .loadUserProfile();
     });
   }
 

@@ -78,7 +78,7 @@ class _MOMPageState extends State<MOMPage> {
     Stream<List<Mom>> fetchMomList() {
       return firestore.collection('moms').snapshots().map((snapshot) => snapshot
           .docs
-          .map((doc) => Mom.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+          .map((doc) => Mom.fromMap(doc.data(), doc.id))
           .toList());
     }
 
@@ -179,19 +179,6 @@ class _MOMPageState extends State<MOMPage> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            "Meetings",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 25,
-                            ),
-                          ),
-                        ],
-                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
