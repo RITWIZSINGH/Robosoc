@@ -10,7 +10,7 @@ class Mom {
     required this.content,
   });
 
-   String? id;
+  String? id;
   final DateTime dateTime;
   final DateTime startTime;
   final DateTime endTime;
@@ -18,6 +18,12 @@ class Mom {
   final int total;
   final String createdBy;
   final String content;
+
+  // New getter to return the day of the week
+  String get day {
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return days[dateTime.weekday - 1];
+  }
 
   // Convert Mom instance to a map for Firestore
   Map<String, dynamic> toMap() {
