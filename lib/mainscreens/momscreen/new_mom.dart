@@ -3,8 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:robosoc/mainscreens/momscreen/mom_details_screen.dart';
+import 'package:provider/provider.dart';
 import 'package:robosoc/models/mom.dart';
+import 'package:robosoc/mainscreens/momscreen/mom_details_screen.dart';
+import 'package:robosoc/widgets/mom_form/form_field.dart';
+import 'package:robosoc/utilities/user_profile_provider.dart';
 
 class MomForm extends StatefulWidget {
   final Mom? mom;
@@ -17,8 +20,6 @@ class MomForm extends StatefulWidget {
 
 class _MomFormState extends State<MomForm> {
   final _formKey = GlobalKey<FormState>();
-
-  // Form field controllers
   final _dateController = TextEditingController();
   final _startTimeController = TextEditingController();
   final _endTimeController = TextEditingController();
@@ -28,16 +29,17 @@ class _MomFormState extends State<MomForm> {
   final _contentController = TextEditingController();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  late String _createdBy;
 
   @override
   void initState() {
     super.initState();
-    // Populate controllers with existing data if editing
+    final userProfile = Provider.of<UserProfileProvider>(context, listen: false);
+    _createdBy = widget.mom?.createdBy ?? userProfile.userName;
+
     if (widget.mom != null) {
-      _dateController.text =
-          DateFormat('yyyy-MM-dd').format(widget.mom!.dateTime);
-      _startTimeController.text =
-          DateFormat('HH:mm').format(widget.mom!.startTime);
+      _dateController.text = DateFormat('yyyy-MM-dd').format(widget.mom!.dateTime);
+      _startTimeController.text = DateFormat('HH:mm').format(widget.mom!.startTime);
       _endTimeController.text = DateFormat('HH:mm').format(widget.mom!.endTime);
       _presentController.text = widget.mom!.present.toString();
       _totalController.text = widget.mom!.total.toString();
@@ -127,92 +129,121 @@ class _MomFormState extends State<MomForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: Text(
           widget.mom == null ? 'Create MOM' : 'Edit MOM',
-          style: TextStyle(color: Colors.white),
+          style: const TextStyle(
+            color: Colors.black87,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        backgroundColor: const Color.fromARGB(255, 175, 89, 241),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black87),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Card(
-          surfaceTintColor: Colors.black,
-          elevation: 8.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            elevation: 8,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
               child: Form(
                 key: _formKey,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    buildFormField(
+                    CustomFormField(
                       controller: _dateController,
                       labelText: 'Date',
                       readOnly: true,
                       onTap: () => _selectDate(context),
                       validatorText: 'Please select a date',
+                      prefix: const Icon(Icons.calendar_today),
                     ),
-                    SizedBox(height: 10),
-                    buildFormField(
+                    const SizedBox(height: 16),
+                    CustomFormField(
                       controller: _startTimeController,
                       labelText: 'Start Time',
                       readOnly: true,
                       onTap: () => _selectTime(context, _startTimeController),
                       validatorText: 'Please select start time',
+                      prefix: const Icon(Icons.access_time),
                     ),
-                    SizedBox(height: 10),
-                    buildFormField(
+                    const SizedBox(height: 16),
+                    CustomFormField(
                       controller: _endTimeController,
                       labelText: 'End Time',
                       readOnly: true,
                       onTap: () => _selectTime(context, _endTimeController),
                       validatorText: 'Please select end time',
+                      prefix: const Icon(Icons.access_time_filled),
                     ),
-                    SizedBox(height: 10),
-                    buildFormField(
-                      controller: _presentController,
-                      labelText: 'Present Attendees',
-                      keyboardType: TextInputType.number,
-                      validatorText: 'Please enter present attendees',
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CustomFormField(
+                            controller: _presentController,
+                            labelText: 'Present',
+                            keyboardType: TextInputType.number,
+                            validatorText: 'Required',
+                            prefix: const Icon(Icons.people),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: CustomFormField(
+                            controller: _totalController,
+                            labelText: 'Total',
+                            keyboardType: TextInputType.number,
+                            validatorText: 'Required',
+                            prefix: const Icon(Icons.groups),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    buildFormField(
-                      controller: _totalController,
-                      labelText: 'Total Attendees',
-                      keyboardType: TextInputType.number,
-                      validatorText: 'Please enter total attendees',
-                    ),
-                    SizedBox(height: 10),
-                    buildFormField(
+                    const SizedBox(height: 16),
+                    CustomFormField(
                       controller: _createdByController,
                       labelText: 'Created By',
                       validatorText: 'Please enter creator name',
+                      prefix: const Icon(Icons.person),
                     ),
-                    SizedBox(height: 10),
-                    TextFormField(
+                    const SizedBox(height: 16),
+                    CustomFormField(
                       controller: _contentController,
-                      decoration: InputDecoration(
-                        labelText: 'Content',
-                        border: OutlineInputBorder(),
-                      ),
+                      labelText: 'Content',
                       maxLines: 5,
-                      validator: (value) => value!.isEmpty
-                          ? 'Please enter meeting content'
-                          : null,
+                      validatorText: 'Please enter meeting content',
+                      prefix: const Icon(Icons.note),
                     ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 24),
                     ElevatedButton(
                       onPressed: _submitForm,
                       style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.orange, // Background color
+                        backgroundColor: Theme.of(context).colorScheme.secondary,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: Text(
-                        widget.mom == null ? 'Save MOM' : 'Update MOM',
+                        widget.mom == null ? 'Create MOM' : 'Update MOM',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -220,28 +251,6 @@ class _MomFormState extends State<MomForm> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget buildFormField({
-    required TextEditingController controller,
-    required String labelText,
-    String? validatorText,
-    TextInputType? keyboardType,
-    bool readOnly = false,
-    VoidCallback? onTap,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: labelText,
-        border: OutlineInputBorder(),
-        contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-      ),
-      keyboardType: keyboardType,
-      readOnly: readOnly,
-      onTap: onTap,
-      validator: (value) => value!.isEmpty ? validatorText : null,
     );
   }
 

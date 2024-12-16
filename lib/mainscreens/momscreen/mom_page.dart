@@ -197,7 +197,7 @@ class _MOMPageState extends State<MOMPage> {
                               Text(
                                 "MEET\nINGS",
                                 style: TextStyle(
-                                  color:
+                                  color: 
                                       Theme.of(context).colorScheme.secondary,
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,

@@ -1,3 +1,5 @@
+// ignore_for_file: use_super_parameters
+
 import 'package:flutter/material.dart';
 
 class CardBackground extends StatelessWidget {
@@ -9,10 +11,10 @@ class CardBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
-            const Color(0xFF8B5CF6), // Purple-500
-            const Color.fromARGB(255, 98, 23, 228), // Purple-600
+            Color(0xFF8B5CF6), // Purple-500
+            Color.fromARGB(255, 98, 23, 228), // Purple-600
           ],
           begin: Alignment.topRight,
           end: Alignment.bottomRight,

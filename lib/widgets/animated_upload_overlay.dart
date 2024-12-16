@@ -55,7 +55,7 @@ class _AnimatedUploadOverlayState extends State<AnimatedUploadOverlay>
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.7),
+        color: Colors.black.withValues(alpha: 0.7),
         shape: BoxShape.circle,
       ),
       child: AnimatedBuilder(
@@ -73,7 +73,7 @@ class _AnimatedUploadOverlayState extends State<AnimatedUploadOverlay>
                     height: 60,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.5),
+                        color: Colors.white.withValues(alpha: 0.5),
                         width: 4,
                       ),
                       shape: BoxShape.circle,
@@ -83,7 +83,7 @@ class _AnimatedUploadOverlayState extends State<AnimatedUploadOverlay>
                     width: 40,
                     height: 40,
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       shape: BoxShape.circle,
                     ),
                   ),
