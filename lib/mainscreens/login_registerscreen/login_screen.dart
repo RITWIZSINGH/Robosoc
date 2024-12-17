@@ -21,11 +21,13 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
+  bool isLogin = false;
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
+        isLogin = true;
       });
 
       try {
@@ -51,6 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => NavigationScreen()),
+            
           );
         }
       } on FirebaseAuthException catch (e) {
