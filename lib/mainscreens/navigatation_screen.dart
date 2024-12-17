@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/home_page.dart';
 import 'package:robosoc/mainscreens/issuehistory/issue_history.dart';
 import 'package:robosoc/mainscreens/momscreen/mom_page.dart';
@@ -7,6 +8,7 @@ import 'package:robosoc/mainscreens/homescreen/add_new_component_screen.dart';
 import 'package:robosoc/mainscreens/momscreen/new_mom.dart';
 import 'package:robosoc/mainscreens/projects_screen/add_new_project_screen.dart';
 import 'package:robosoc/utilities/page_transitions.dart';
+import 'package:robosoc/utilities/user_profile_provider.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -30,8 +32,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
     super.initState();
     _pageController = PageController(
       initialPage: currentIndex,
-      viewportFraction: 1.0, // Ensures full page view
+      viewportFraction: 1.0,
     );
+
+    // Load user profile immediately when navigating to NavigationScreen
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<UserProfileProvider>(context, listen: false)
+          .loadUserProfile(forceRefresh: true);
+    });
   }
 
   void changePage(int index) {
@@ -39,11 +47,12 @@ class _NavigationScreenState extends State<NavigationScreen> {
       currentIndex = index;
       _pageController.animateToPage(
         index,
-        duration: const Duration(milliseconds: 450), // Slightly longer duration
-        curve: Curves.fastLinearToSlowEaseIn, // Smoother curve
+        duration: const Duration(milliseconds: 450),
+        curve: Curves.fastLinearToSlowEaseIn,
       );
     });
   }
+
 
   @override
   Widget build(BuildContext context) {

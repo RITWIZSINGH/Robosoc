@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
+import 'package:robosoc/utilities/user_profile_provider.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -36,6 +38,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'photoURL': '',
             'createdAt': FieldValue.serverTimestamp(),
           });
+
+          // Refresh the user profile before navigating
+          await Provider.of<UserProfileProvider>(context, listen: false)
+              .loadUserProfile(forceRefresh: true);
 
           Navigator.pushReplacement(
             context,

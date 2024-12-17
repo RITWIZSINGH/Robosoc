@@ -44,11 +44,13 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   Consumer<UserProfileProvider>(
                     builder: (context, userProvider, child) {
+                      if (userProvider.isLoading) {
+                        return const ProfileLoadingState();
+                      }
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Hi!",
+                          Text("Hi!",
                               style: TextStyle(
                                   fontSize: 16, fontFamily: "NexaRegular")),
                           Text(
