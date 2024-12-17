@@ -28,7 +28,7 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
     Future.microtask(() {
       Provider.of<ProjectProvider>(context, listen: false).fetchProjects();
       Provider.of<UserProfileProvider>(context, listen: false)
-          .loadUserProfile();
+          .loadUserProfile(forceRefresh: true);
     });
 
     _searchController.addListener(() {
@@ -91,7 +91,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => const ProfileScreen()),
-                            ),
+                            ).then((_) {
+                          // Refresh profile when returning from ProfileScreen
+                          Provider.of<UserProfileProvider>(context, listen: false)
+                              .loadUserProfile(forceRefresh: true);
+                        }),
                           );
                         },
                       )

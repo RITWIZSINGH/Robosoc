@@ -25,7 +25,7 @@ class _MOMPageState extends State<MOMPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<UserProfileProvider>(context, listen: false)
-          .loadUserProfile();
+          .loadUserProfile(forceRefresh: true);
     });
 
     _searchController.addListener(() {
@@ -125,8 +125,12 @@ class _MOMPageState extends State<MOMPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ProfileScreen(),
-                          ),
-                        ),
+                          )
+                        ).then((_) {
+                          // Refresh profile when returning from ProfileScreen
+                          Provider.of<UserProfileProvider>(context, listen: false)
+                              .loadUserProfile(forceRefresh: true);
+                        }),
                       );
                     },
                   )
