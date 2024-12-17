@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:robosoc/mainscreens/homescreen/profile_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/utilities/page_transitions.dart';
-import 'package:robosoc/utilities/user_profile_provider.dart'; // New provider
+import 'package:robosoc/utilities/user_profile_provider.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:robosoc/widgets/animated_profile_image.dart';
 import 'package:robosoc/widgets/loading_states.dart';
@@ -26,7 +26,7 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<ComponentProvider>(context, listen: false).loadComponents();
       Provider.of<UserProfileProvider>(context, listen: false)
-          .loadUserProfile();
+          .loadUserProfile(forceRefresh: true);
     });
   }
 
@@ -73,7 +73,11 @@ class _HomePageState extends State<HomePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => const ProfileScreen()),
-                        ),
+                        ).then((_) {
+                          // Refresh profile when returning from ProfileScreen
+                          Provider.of<UserProfileProvider>(context, listen: false)
+                              .loadUserProfile(forceRefresh: true);
+                        }),
                       );
                     },
                   )

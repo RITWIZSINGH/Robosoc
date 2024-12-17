@@ -12,8 +12,8 @@ class UserProfileProvider with ChangeNotifier {
   String get profileImageUrl => _profileImageUrl;
   bool get isLoading => _isLoading;
 
-  Future<void> loadUserProfile() async {
-    if (_isInitialized) return;
+  Future<void> loadUserProfile({bool forceRefresh = false}) async {
+    if (_isInitialized && !forceRefresh) return;
 
     try {
       _isLoading = true;
@@ -42,7 +42,16 @@ class UserProfileProvider with ChangeNotifier {
     }
   }
 
+  void updateProfile(String name, String imageUrl) {
+    _userName = name;
+    _profileImageUrl = imageUrl;
+    notifyListeners();
+  }
+
   void reset() {
     _isInitialized = false;
+    _userName = 'User';
+    _profileImageUrl = '';
+    _isLoading = true;
   }
 }
