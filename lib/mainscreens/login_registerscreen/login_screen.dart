@@ -31,7 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       try {
-        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
         );
@@ -53,7 +54,6 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => NavigationScreen()),
-            
           );
         }
       } on FirebaseAuthException catch (e) {
@@ -89,6 +89,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double sw = MediaQuery.of(context).size.width;
+    double sh = MediaQuery.of(context).size.height;
+
     return KeyboardVisibilityBuilder(
       builder: (context, isKeyboardVisible) {
         return Stack(
@@ -101,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     top: 0,
                     left: 0,
                     right: 0,
-                    height: MediaQuery.of(context).size.height * 0.4,
+                    height: sh * 0.4,
                     child: Image.asset(
                       'assets/background_images/login_page.png',
                       fit: BoxFit.cover,
@@ -112,7 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: MediaQuery.of(context).size.height * 0.3,
+                    height: sh * 0.3,
                     child: Container(
                       decoration: const BoxDecoration(
                         color: Colors.white,
@@ -127,36 +130,42 @@ class _LoginScreenState extends State<LoginScreen> {
                   SafeArea(
                     child: SingleChildScrollView(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        padding: EdgeInsets.symmetric(horizontal: sw * 0.064),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            SizedBox(height: isKeyboardVisible ? 20 : 40),
-                            const Text(
+                            SizedBox(
+                                height: isKeyboardVisible
+                                    ? sh * 0.027
+                                    : sh * 0.054),
+                            Text(
                               'ROBOSOC',
                               style: TextStyle(
-                                fontSize: 24,
+                                fontSize: sw * 0.064,
                                 fontWeight: FontWeight.bold,
                                 fontFamily: "NexaBold",
                                 color: Colors.black,
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            const Text(
+                            Text(
                               'Inventory Manager',
                               style: TextStyle(
-                                fontSize: 16,
+                                fontSize: sw * 0.042,
                                 fontFamily: "NexaRegular",
                                 color: Colors.black,
                               ),
                               textAlign: TextAlign.center,
                             ),
-                            SizedBox(height: isKeyboardVisible ? 20 : 40),
+                            SizedBox(
+                                height: isKeyboardVisible
+                                    ? sh * 0.027
+                                    : sh * 0.054),
                             Container(
-                              padding: const EdgeInsets.all(24),
+                              padding: EdgeInsets.all(sw * 0.064),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(24),
+                                borderRadius: BorderRadius.circular(sw * 0.064),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.1),
@@ -168,12 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               child: Form(
                                 key: _formKey,
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   children: [
                                     Container(
-                                      height: 50,
+                                      height: sh * 0.067,
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(25),
+                                        borderRadius:
+                                            BorderRadius.circular(sw * 0.067),
                                         color: const Color(0xFFF5F5F5),
                                       ),
                                       child: Row(
@@ -182,7 +193,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                             child: Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
-                                                borderRadius: BorderRadius.circular(25),
+                                                borderRadius:
+                                                    BorderRadius.circular(
+                                                        sw * 0.067),
                                               ),
                                               child: const Center(
                                                 child: Text(
@@ -201,7 +214,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 Navigator.pushReplacement(
                                                   context,
                                                   MaterialPageRoute(
-                                                    builder: (context) => const RegisterScreen(),
+                                                    builder: (context) =>
+                                                        const RegisterScreen(),
                                                   ),
                                                 );
                                               },
@@ -217,15 +231,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(height: 24),
-                                    const Text(
+                                    SizedBox(height: sh * 0.032),
+                                    Text(
                                       'Login With Email',
                                       style: TextStyle(
-                                        fontSize: 18,
+                                        fontSize: sw * 0.048,
                                         fontFamily: "NexaBold",
                                       ),
                                     ),
-                                    const SizedBox(height: 24),
+                                    SizedBox(height: sh * 0.032),
                                     TextFormField(
                                       controller: _emailController,
                                       decoration: InputDecoration(
@@ -234,7 +248,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontFamily: "NexaRegular",
                                         ),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(sw * 0.032),
                                         ),
                                         filled: true,
                                         fillColor: const Color(0xFFF5F5F5),
@@ -246,7 +261,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         return null;
                                       },
                                     ),
-                                    const SizedBox(height: 16),
+                                    SizedBox(height: sh * 0.022),
                                     TextFormField(
                                       controller: _passwordController,
                                       obscureText: !_isPasswordVisible,
@@ -256,7 +271,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                           fontFamily: "NexaRegular",
                                         ),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius:
+                                              BorderRadius.circular(sw * 0.032),
                                         ),
                                         filled: true,
                                         fillColor: const Color(0xFFF5F5F5),
@@ -269,17 +285,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           ),
                                           onPressed: () {
                                             setState(() {
-                                              _isPasswordVisible = !_isPasswordVisible;
+                                              _isPasswordVisible =
+                                                  !_isPasswordVisible;
                                             });
                                           },
                                         ),
                                       ),
-                                      validator: (value) {
-                                        if (value?.isEmpty ?? true) {
-                                          return 'Please enter your password';
-                                        }
-                                        return null;
-                                      },
                                     ),
                                     Align(
                                       alignment: Alignment.centerRight,
@@ -288,35 +299,39 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => const ForgotPasswordScreen(),
+                                              builder: (context) =>
+                                                  const ForgotPasswordScreen(),
                                             ),
                                           );
                                         },
-                                        child: const Text(
+                                        child: Text(
                                           'Forgot Password?',
                                           style: TextStyle(
                                             color: Colors.blue,
                                             fontFamily: "NexaRegular",
+                                            fontSize: sw * 0.037,
                                           ),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 24),
+                                    SizedBox(height: sh * 0.032),
                                     SizedBox(
-                                      height: 50,
+                                      height: sh * 0.067,
                                       child: ElevatedButton(
                                         onPressed: _login,
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color(0xFFFFC700),
+                                          backgroundColor:
+                                              const Color(0xFFFFC700),
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(12),
+                                            borderRadius: BorderRadius.circular(
+                                                sw * 0.032),
                                           ),
                                         ),
-                                        child: const Text(
+                                        child: Text(
                                           'LOGIN',
                                           style: TextStyle(
                                             color: Colors.black,
-                                            fontSize: 16,
+                                            fontSize: sw * 0.042,
                                             fontFamily: "NexaBold",
                                           ),
                                         ),

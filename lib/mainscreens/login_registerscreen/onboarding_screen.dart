@@ -77,20 +77,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double sw = MediaQuery.of(context).size.width;
+    double sh = MediaQuery.of(context).size.height;
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+            padding: EdgeInsets.symmetric(
+              horizontal: sw * 0.064, 
+              vertical: sh * 0.043
+            ),
             child: Form(
               key: _formKey,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const OnboardingHeader(),
-                  const SizedBox(height: 32),
+                  SizedBox(height: sh * 0.043),
                   CustomTextField(
                     controller: _nameController,
                     label: 'Your Name',
@@ -103,7 +108,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 24),
+                  SizedBox(height: sh * 0.032),
                   RoleSelector(
                     roles: _roles,
                     selectedRole: _selectedRole,
@@ -111,31 +116,31 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       setState(() => _selectedRole = role);
                     },
                   ),
-                  const SizedBox(height: 40),
+                  SizedBox(height: sh * 0.054),
                   ElevatedButton(
                     onPressed: _isLoading ? null : _completeOnboarding,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow[700],
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: EdgeInsets.symmetric(vertical: sh * 0.021),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(sw * 0.042),
                       ),
                       elevation: 2,
                     ),
                     child: _isLoading
-                        ? const SizedBox(
-                            height: 24,
-                            width: 24,
-                            child: CircularProgressIndicator(
+                        ? SizedBox(
+                            height: sh * 0.032,
+                            width: sw * 0.064,
+                            child: const CircularProgressIndicator(
                               color: Colors.white,
                               strokeWidth: 2,
                             ),
                           )
-                        : const Text(
+                        : Text(
                             'Complete Profile',
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: sw * 0.048,
                               fontWeight: FontWeight.bold,
                               fontFamily: 'NexaBold',
                             ),

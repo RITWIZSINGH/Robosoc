@@ -55,7 +55,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         );
 
         // Navigate back to login screen
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginScreen()));
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginScreen()));
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Registration failed: ${e.toString()}')),
@@ -72,6 +73,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double sw = MediaQuery.of(context).size.width;
+    double sh = MediaQuery.of(context).size.height;
+
     return Stack(
       children: [
         Scaffold(
@@ -82,7 +86,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 top: 0,
                 left: 0,
                 right: 0,
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: sh * 0.4,
                 child: Image.asset(
                   'assets/background_images/login_page.png',
                   fit: BoxFit.cover,
@@ -93,7 +97,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 bottom: 0,
                 left: 0,
                 right: 0,
-                height: MediaQuery.of(context).size.height * 0.4,
+                height: sh * 0.4,
                 child: Container(
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -108,39 +112,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
               SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.symmetric(horizontal: sw * 0.064),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        const SizedBox(height: 40),
-                        const Text(
+                        SizedBox(height: sh * 0.054),
+                        Text(
                           'ROBOSOC',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: sw * 0.064,
                             fontWeight: FontWeight.bold,
                             fontFamily: "NexaBold",
                             color: Colors.black,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const Text(
+                        Text(
                           'Inventory Manager',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: sw * 0.042,
                             fontFamily: "NexaRegular",
                             color: Colors.black,
                           ),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 40),
+                        SizedBox(height: sh * 0.054),
                         Container(
-                          padding: const EdgeInsets.all(24),
+                          padding: EdgeInsets.all(sw * 0.064),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(sw * 0.064),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withValues(alpha: 0.2),
+                                color: Colors.black.withOpacity(0.2),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -153,7 +157,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               children: [
                                 Container(
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(25),
+                                    borderRadius:
+                                        BorderRadius.circular(sw * 0.067),
                                     color: Colors.grey[200],
                                   ),
                                   child: Row(
@@ -161,15 +166,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       Expanded(
                                         child: TextButton(
                                           onPressed: () {
-                                            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=> LoginScreen()));
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        LoginScreen()));
                                           },
                                           style: TextButton.styleFrom(
                                             foregroundColor: Colors.black,
                                           ),
-                                          child: const Text(
+                                          child: Text(
                                             'Login',
                                             style: TextStyle(
-                                                fontFamily: "NexaBold"),
+                                              fontFamily: "NexaBold",
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -177,18 +187,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                         child: Container(
                                           decoration: BoxDecoration(
                                             color: Colors.black,
-                                            borderRadius:
-                                                BorderRadius.circular(25),
+                                            borderRadius: BorderRadius.circular(
+                                                sw * 0.067),
                                           ),
                                           child: TextButton(
                                             onPressed: () {},
                                             style: TextButton.styleFrom(
                                               foregroundColor: Colors.white,
                                             ),
-                                            child: const Text(
+                                            child: Text(
                                               'Register',
                                               style: TextStyle(
-                                                  fontFamily: "NexaBold"),
+                                                  fontFamily: "NexaBold",
+                                                  fontSize: sw * 0.037),
                                             ),
                                           ),
                                         ),
@@ -196,25 +207,26 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     ],
                                   ),
                                 ),
-                                const SizedBox(height: 20),
-                                const Text(
+                                SizedBox(height: sh * 0.027),
+                                Text(
                                   'Register New Member',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    fontSize: sw * 0.048,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "NexaRegular",
                                   ),
                                 ),
-                                const SizedBox(height: 20),
+                                SizedBox(height: sh * 0.027),
                                 TextFormField(
                                   controller: _emailController,
                                   decoration: InputDecoration(
                                     hintText: 'Enter email id',
-                                    hintStyle: const TextStyle(
+                                    hintStyle: TextStyle(
                                       fontFamily: "NexaRegular",
                                     ),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius:
+                                          BorderRadius.circular(sw * 0.032),
                                     ),
                                     filled: true,
                                     fillColor: const Color(0xFFF5F5F5),
@@ -226,17 +238,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 15),
+                                SizedBox(height: sh * 0.02),
                                 TextFormField(
                                   controller: _passwordController,
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     hintText: 'Enter Password',
-                                    hintStyle: const TextStyle(
+                                    hintStyle: TextStyle(
                                       fontFamily: "NexaRegular",
                                     ),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius:
+                                          BorderRadius.circular(sw * 0.032),
                                     ),
                                     filled: true,
                                     fillColor: const Color(0xFFF5F5F5),
@@ -248,17 +261,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 15),
+                                SizedBox(height: sh * 0.02),
                                 TextFormField(
                                   controller: _confirmPasswordController,
                                   obscureText: true,
                                   decoration: InputDecoration(
                                     hintText: 'Confirm Password',
-                                    hintStyle: const TextStyle(
+                                    hintStyle: TextStyle(
                                       fontFamily: "NexaRegular",
                                     ),
                                     border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                      borderRadius:
+                                          BorderRadius.circular(sw * 0.032),
                                     ),
                                     filled: true,
                                     fillColor: const Color(0xFFF5F5F5),
@@ -273,22 +287,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 24),
+                                SizedBox(height: sh * 0.032),
                                 SizedBox(
-                                  height: 50,
+                                  height: sh * 0.067,
                                   child: ElevatedButton(
                                     onPressed: _register,
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: const Color(0xFFFFC700),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
+                                        borderRadius:
+                                            BorderRadius.circular(sw * 0.032),
                                       ),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       'REGISTER',
                                       style: TextStyle(
                                         color: Colors.black,
-                                        fontSize: 16,
                                         fontFamily: "NexaBold",
                                       ),
                                     ),
