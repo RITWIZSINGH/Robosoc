@@ -11,6 +11,72 @@ import 'package:robosoc/utilities/image_picker.dart';
 import 'package:robosoc/widgets/issued_commponent_card.dart';
 import 'package:robosoc/widgets/profile_image.dart';
 
+// New widget for editing profile
+class EditProfileForm extends StatelessWidget {
+  final TextEditingController nameController;
+  final String selectedRole;
+  final List<String> roles;
+  final Function(String) onRoleSelected;
+
+  const EditProfileForm({
+    Key? key,
+    required this.nameController,
+    required this.selectedRole,
+    required this.roles,
+    required this.onRoleSelected,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: TextField(
+            controller: nameController,
+            decoration: InputDecoration(
+              labelText: 'Name',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+        ),
+        SizedBox(height: 10),
+        Text(
+          'Select Role',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'NexaBold',
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: roles.map((role) {
+              return ChoiceChip(
+                label: Text(role),
+                selected: selectedRole == role,
+                onSelected: (selected) {
+                  onRoleSelected(selected ? role : '');
+                },
+                selectedColor: Colors.yellow[700],
+                backgroundColor: Colors.grey[200],
+                labelStyle: TextStyle(
+                  color: selectedRole == role ? Colors.white : Colors.black,
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -35,10 +101,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _selectedRole = '';
 
   final List<String> _roles = [
-    'Member',
-    'Team Lead',
+    'Co-ordinator',
+    'Executive',
     'Administrator',
-    'Inventory Manager',
+    'Volunteer',
   ];
 
   @override
@@ -60,7 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _userName = docSnapshot.data()?['name'] ?? '';
             _userRole = docSnapshot.data()?['role'] ?? '';
             _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
-            
+
             // Initialize controllers and selected role for editing
             _nameController.text = _userName;
             _selectedRole = _userRole;
@@ -162,10 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final user = _auth.currentUser;
       if (user != null) {
-        await _firestore
-            .collection('profiles')
-            .doc(user.uid)
-            .update({
+        await _firestore.collection('profiles').doc(user.uid).update({
           'name': _nameController.text,
           'role': _selectedRole,
         });
@@ -230,8 +293,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onPressed: _saveProfileChanges,
                           ),
                         IconButton(
-                          icon: Icon(_isEditing ? Icons.close : Icons.edit, 
-                            color: _isEditing ? Colors.red : Colors.black),
+                          icon: Icon(_isEditing ? Icons.close : Icons.edit,
+                              color: _isEditing ? Colors.red : Colors.black),
                           onPressed: () {
                             setState(() {
                               _isEditing = !_isEditing;
@@ -266,72 +329,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       isUploadingDisabled: _isUploading,
                     ),
                     SizedBox(height: 15),
-                    _isEditing 
-                      ? Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: TextField(
-                                controller: _nameController,
-                                decoration: InputDecoration(
-                                  labelText: 'Name',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                    _isEditing
+                        ? EditProfileForm(
+                            nameController: _nameController,
+                            selectedRole: _selectedRole,
+                            roles: _roles,
+                            onRoleSelected: (role) {
+                              setState(() {
+                                _selectedRole = role;
+                              });
+                            },
+                          )
+                        : Column(
+                            children: [
+                              Text(
+                                _userName,
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'NexaBold',
                                 ),
                               ),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              'Select Role',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'NexaBold',
+                              Text(
+                                _userRole,
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 16,
+                                  fontFamily: 'NexaRegular',
+                                ),
                               ),
-                            ),
-                            Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: _roles.map((role) {
-                                return ChoiceChip(
-                                  label: Text(role),
-                                  selected: _selectedRole == role,
-                                  onSelected: (selected) {
-                                    setState(() {
-                                      _selectedRole = selected ? role : '';
-                                    });
-                                  },
-                                  selectedColor: Colors.yellow[700],
-                                  backgroundColor: Colors.grey[200],
-                                  labelStyle: TextStyle(
-                                    color: _selectedRole == role ? Colors.white : Colors.black,
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        )
-                      : Column(
-                          children: [
-                            Text(
-                              _userName,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'NexaBold',
-                              ),
-                            ),
-                            Text(
-                              _userRole,
-                              style: TextStyle(
-                                color: Colors.grey[600],
-                                fontSize: 16,
-                                fontFamily: 'NexaRegular',
-                              ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                   ],
                 ),
               ),
