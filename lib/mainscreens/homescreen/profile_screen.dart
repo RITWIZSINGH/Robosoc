@@ -1,5 +1,3 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,11 +24,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   bool _isUploading = false;
+  bool _isEditing = false;
 
   String _userName = '';
   String _userRole = '';
   String _profileImageUrl = '';
   List<Component> _issuedComponents = [];
+
+  final TextEditingController _nameController = TextEditingController();
+  String _selectedRole = '';
+
+  final List<String> _roles = [
+    'Member',
+    'Team Lead',
+    'Administrator',
+    'Inventory Manager',
+  ];
 
   @override
   void initState() {
@@ -51,6 +60,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _userName = docSnapshot.data()?['name'] ?? '';
             _userRole = docSnapshot.data()?['role'] ?? '';
             _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
+            
+            // Initialize controllers and selected role for editing
+            _nameController.text = _userName;
+            _selectedRole = _userRole;
           });
         }
       }
@@ -138,6 +151,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  void _saveProfileChanges() async {
+    if (_nameController.text.isEmpty || _selectedRole.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        await _firestore
+            .collection('profiles')
+            .doc(user.uid)
+            .update({
+          'name': _nameController.text,
+          'role': _selectedRole,
+        });
+
+        setState(() {
+          _userName = _nameController.text;
+          _userRole = _selectedRole;
+          _isEditing = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Profile updated successfully')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating profile: $e')),
+      );
+    }
+  }
+
   void _logout() {
     _auth.signOut();
     Navigator.pushAndRemoveUntil(
@@ -173,9 +222,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         fontFamily: 'NexaBold',
                       ),
                     ),
-                    IconButton(
-                      icon: Icon(Icons.logout, color: Colors.red),
-                      onPressed: _logout,
+                    Row(
+                      children: [
+                        if (_isEditing)
+                          IconButton(
+                            icon: Icon(Icons.save, color: Colors.green),
+                            onPressed: _saveProfileChanges,
+                          ),
+                        IconButton(
+                          icon: Icon(_isEditing ? Icons.close : Icons.edit, 
+                            color: _isEditing ? Colors.red : Colors.black),
+                          onPressed: () {
+                            setState(() {
+                              _isEditing = !_isEditing;
+                              // Reset to original values if canceling edit
+                              if (!_isEditing) {
+                                _nameController.text = _userName;
+                                _selectedRole = _userRole;
+                              }
+                            });
+                          },
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.logout, color: Colors.red),
+                          onPressed: _logout,
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -194,22 +266,72 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       isUploadingDisabled: _isUploading,
                     ),
                     SizedBox(height: 15),
-                    Text(
-                      _userName,
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: 'NexaBold',
-                      ),
-                    ),
-                    Text(
-                      _userRole,
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 16,
-                        fontFamily: 'NexaRegular',
-                      ),
-                    ),
+                    _isEditing 
+                      ? Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: TextField(
+                                controller: _nameController,
+                                decoration: InputDecoration(
+                                  labelText: 'Name',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              'Select Role',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'NexaBold',
+                              ),
+                            ),
+                            Wrap(
+                              spacing: 10,
+                              runSpacing: 10,
+                              children: _roles.map((role) {
+                                return ChoiceChip(
+                                  label: Text(role),
+                                  selected: _selectedRole == role,
+                                  onSelected: (selected) {
+                                    setState(() {
+                                      _selectedRole = selected ? role : '';
+                                    });
+                                  },
+                                  selectedColor: Colors.yellow[700],
+                                  backgroundColor: Colors.grey[200],
+                                  labelStyle: TextStyle(
+                                    color: _selectedRole == role ? Colors.white : Colors.black,
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ],
+                        )
+                      : Column(
+                          children: [
+                            Text(
+                              _userName,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'NexaBold',
+                              ),
+                            ),
+                            Text(
+                              _userRole,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 16,
+                                fontFamily: 'NexaRegular',
+                              ),
+                            ),
+                          ],
+                        ),
                   ],
                 ),
               ),
