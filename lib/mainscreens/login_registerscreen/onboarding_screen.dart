@@ -6,6 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/navigatation_screen.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart';
+import 'package:robosoc/widgets/onboarding_screen/onboarding_header.dart';
+import 'package:robosoc/widgets/onboarding_screen/role_selector.dart';
+import 'package:robosoc/widgets/onboarding_screen/custom_textfield.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -18,16 +21,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final TextEditingController _nameController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   String _selectedRole = '';
+  bool _isLoading = false;
 
   final List<String> _roles = [
-    'Member',
-    'Team Lead',
+    'Volunteer',
+    'Executive',
+    'Co-ordinator',
     'Administrator',
-    'Inventory Manager',
   ];
 
   void _completeOnboarding() async {
     if (_formKey.currentState!.validate() && _selectedRole.isNotEmpty) {
+      setState(() => _isLoading = true);
+
       try {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
@@ -41,7 +47,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             'createdAt': FieldValue.serverTimestamp(),
           });
 
-          // Refresh the user profile before navigating
           await Provider.of<UserProfileProvider>(context, listen: false)
               .loadUserProfile(forceRefresh: true);
 
@@ -52,9 +57,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error completing onboarding: $e')),
+          SnackBar(
+            content: Text('Error completing onboarding: $e'),
+            backgroundColor: Colors.red,
+          ),
         );
+      } finally {
+        setState(() => _isLoading = false);
       }
+    } else if (_selectedRole.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a role'),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -65,44 +82,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
             child: Form(
               key: _formKey,
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.asset(
-                    'assets/images/onboarding.png',
-                    height: 250,
-                  ),
-                  Text(
-                    'Welcome to RoboSoc',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NexaBold',
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Let\'s set up your profile',
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.grey[600],
-                      fontFamily: 'NexaRegular',
-                    ),
-                  ),
-                  SizedBox(height: 30),
-                  TextFormField(
+                  const OnboardingHeader(),
+                  const SizedBox(height: 32),
+                  CustomTextField(
                     controller: _nameController,
-                    decoration: InputDecoration(
-                      labelText: 'Your Name',
-                      hintText: 'Enter your full name',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      prefixIcon: Icon(Icons.person),
-                    ),
+                    label: 'Your Name',
+                    hint: 'Enter your full name',
+                    icon: Icons.person_outline,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Please enter your name';
@@ -110,54 +103,43 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       return null;
                     },
                   ),
-                  SizedBox(height: 20),
-                  Text(
-                    'Select Your Role',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'NexaBold',
-                    ),
+                  const SizedBox(height: 24),
+                  RoleSelector(
+                    roles: _roles,
+                    selectedRole: _selectedRole,
+                    onRoleSelected: (role) {
+                      setState(() => _selectedRole = role);
+                    },
                   ),
-                  SizedBox(height: 10),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: _roles.map((role) {
-                      return ChoiceChip(
-                        label: Text(role),
-                        selected: _selectedRole == role,
-                        onSelected: (selected) {
-                          setState(() {
-                            _selectedRole = selected ? role : '';
-                          });
-                        },
-                        selectedColor: Colors.yellow[700],
-                        backgroundColor: Colors.grey[200],
-                        labelStyle: TextStyle(
-                          color: _selectedRole == role ? Colors.white : Colors.black,
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  SizedBox(height: 30),
+                  const SizedBox(height: 40),
                   ElevatedButton(
-                    onPressed: _completeOnboarding,
+                    onPressed: _isLoading ? null : _completeOnboarding,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.yellow[700],
-                      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 15),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
+                      elevation: 2,
                     ),
-                    child: Text(
-                      'Complete Profile',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontFamily: 'NexaBold',
-                      ),
-                    ),
+                    child: _isLoading
+                        ? const SizedBox(
+                            height: 24,
+                            width: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Complete Profile',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'NexaBold',
+                            ),
+                          ),
                   ),
                 ],
               ),
