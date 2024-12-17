@@ -36,7 +36,9 @@ class UserProfileProvider with ChangeNotifier {
       _isInitialized = true;
       notifyListeners();
     } catch (e) {
-      print('Error fetching user profile: $e');
+      if (kDebugMode) {
+        print('Error fetching user profile: $e');
+      }
       _isLoading = false;
       notifyListeners();
     }

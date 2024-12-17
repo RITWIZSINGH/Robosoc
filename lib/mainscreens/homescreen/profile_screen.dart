@@ -1,7 +1,10 @@
+// ignore_for_file: use_super_parameters, use_build_context_synchronously
+
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
@@ -134,7 +137,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     } catch (e) {
-      print('Error fetching user profile: $e');
+      if (kDebugMode) {
+        print('Error fetching user profile: $e');
+      }
     }
   }
 
@@ -157,7 +162,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     } catch (e) {
-      print('Error fetching issued components: $e');
+      if (kDebugMode) {
+        print('Error fetching issued components: $e');
+      }
     }
   }
 
@@ -169,7 +176,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         await oldImageRef.delete();
       }
     } catch (e) {
-      print('Error deleting old profile image: $e');
+      if (kDebugMode) {
+        print('Error deleting old profile image: $e');
+      }
     }
   }
 
@@ -213,7 +222,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         });
       }
     } catch (e) {
-      print('Error uploading profile image: $e');
+      if (kDebugMode) {
+        print('Error uploading profile image: $e');
+      }
     }
   }
 

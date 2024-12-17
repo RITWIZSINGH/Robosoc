@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, use_super_parameters
+
 import 'package:flutter/material.dart';
 import 'package:robosoc/constants.dart';
 import 'package:robosoc/models/mom.dart';
@@ -26,7 +28,7 @@ class MomCard extends StatelessWidget {
                 height: 100,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.1),
+                  color: Colors.white.withValues(alpha: 0.1),
                 ),
               ),
             ),
@@ -38,7 +40,7 @@ class MomCard extends StatelessWidget {
                 height: 120,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(0.05),
+                  color: Colors.white.withValues(alpha: 0.05),
                 ),
               ),
             ),
