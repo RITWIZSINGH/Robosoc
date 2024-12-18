@@ -107,7 +107,8 @@ class _MOMPageState extends State<MOMPage> {
                             ),
                           ),
                           Text(
-                            "Welcome, ${userProvider.userName}",
+                            "Welcome, \n${userProvider.userName}",
+                            maxLines: 2,
                             style: TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
@@ -124,13 +125,13 @@ class _MOMPageState extends State<MOMPage> {
                         profileImageUrl: userProvider.profileImageUrl,
                         isLoading: userProvider.isLoading,
                         onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const ProfileScreen(),
-                          )
-                        ).then((_) {
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const ProfileScreen(),
+                            )).then((_) {
                           // Refresh profile when returning from ProfileScreen
-                          Provider.of<UserProfileProvider>(context, listen: false)
+                          Provider.of<UserProfileProvider>(context,
+                                  listen: false)
                               .loadUserProfile(forceRefresh: true);
                         }),
                       );

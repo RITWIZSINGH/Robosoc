@@ -42,27 +42,36 @@ class _HomePageState extends State<HomePage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Consumer<UserProfileProvider>(
-                    builder: (context, userProvider, child) {
-                      if (userProvider.isLoading) {
-                        return const ProfileLoadingState();
-                      }
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Hi!",
+                  Flexible(
+                    child: Consumer<UserProfileProvider>(
+                      builder: (context, userProvider, child) {
+                        if (userProvider.isLoading) {
+                          return const ProfileLoadingState();
+                        }
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Hi!",
                               style: TextStyle(
-                                  fontSize: 16, fontFamily: "NexaRegular")),
-                          Text(
-                            "Welcome, ${userProvider.userName}",
-                            style: TextStyle(
+                                fontSize: 16,
+                                fontFamily: "NexaRegular",
+                              ),
+                            ),
+                            Text(
+                              "Welcome, \n${userProvider.userName}",
+                              style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: "NexaBold"),
-                          ),
-                        ],
-                      );
-                    },
+                                fontFamily: "NexaBold",
+                              ),
+                              // Truncate if it overflows
+                              maxLines: 2, // Limit to one line
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
                   Consumer<UserProfileProvider>(
                     builder: (context, userProvider, child) {
@@ -72,15 +81,17 @@ class _HomePageState extends State<HomePage> {
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const ProfileScreen()),
+                            builder: (context) => const ProfileScreen(),
+                          ),
                         ).then((_) {
                           // Refresh profile when returning from ProfileScreen
-                          Provider.of<UserProfileProvider>(context, listen: false)
+                          Provider.of<UserProfileProvider>(context,
+                                  listen: false)
                               .loadUserProfile(forceRefresh: true);
                         }),
                       );
                     },
-                  )
+                  ),
                 ],
               ),
             ),

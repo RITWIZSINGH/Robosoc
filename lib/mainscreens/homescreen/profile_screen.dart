@@ -37,6 +37,7 @@ class EditProfileForm extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: TextField(
             controller: nameController,
+            maxLength: 20,
             decoration: InputDecoration(
               labelText: 'Name',
               border: OutlineInputBorder(

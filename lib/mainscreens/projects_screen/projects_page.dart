@@ -72,11 +72,12 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                                   style: TextStyle(
                                       fontSize: 16, fontFamily: "NexaRegular")),
                               Text(
-                                "Welcome, ${userProvider.userName}",
+                                "Welcome, \n${userProvider.userName}",
                                 style: TextStyle(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: "NexaBold"),
+                                maxLines: 2,
                               ),
                             ],
                           );
@@ -92,10 +93,11 @@ class _ProjectsScreenState extends State<ProjectsScreen> {
                               MaterialPageRoute(
                                   builder: (context) => const ProfileScreen()),
                             ).then((_) {
-                          // Refresh profile when returning from ProfileScreen
-                          Provider.of<UserProfileProvider>(context, listen: false)
-                              .loadUserProfile(forceRefresh: true);
-                        }),
+                              // Refresh profile when returning from ProfileScreen
+                              Provider.of<UserProfileProvider>(context,
+                                      listen: false)
+                                  .loadUserProfile(forceRefresh: true);
+                            }),
                           );
                         },
                       )

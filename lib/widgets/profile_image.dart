@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:robosoc/widgets/animated_upload_overlay.dart';
 
 class ProfileImage extends StatelessWidget {
@@ -10,19 +11,18 @@ class ProfileImage extends StatelessWidget {
   final bool isUploadingDisabled;
 
   const ProfileImage({
-    super.key,
+    Key? key,
     required this.profileImageUrl,
     required this.selectedImage,
     required this.isUploading,
     required this.onSelectImage,
     required this.isUploadingDisabled,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Profile Image
         Container(
           width: 140,
           height: 140,
@@ -30,59 +30,74 @@ class ProfileImage extends StatelessWidget {
             shape: BoxShape.circle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.2),
+                color: Colors.black.withOpacity(0.2),
                 blurRadius: 10,
                 offset: const Offset(0, 5),
               ),
             ],
           ),
-          child: CircleAvatar(
-            radius: 70,
-            backgroundImage: profileImageUrl.isNotEmpty
-                ? NetworkImage(profileImageUrl)
-                : (selectedImage != null
-                    ? MemoryImage(selectedImage!)
-                    : const AssetImage("assets/images/defaultPerson.png"))
-                as ImageProvider,
-            child: isUploading ? const AnimatedUploadOverlay() : null,
+          child: ClipOval(
+            child: selectedImage != null
+                ? Image.memory(
+                    selectedImage!,
+                    fit: BoxFit.cover,
+                    width: 140,
+                    height: 140,
+                  )
+                : Center(
+                    child: CachedNetworkImage(
+                      imageUrl: profileImageUrl.isNotEmpty
+                          ? profileImageUrl
+                          : 'assets/images/defaultPerson.png',
+                      fit: BoxFit.cover,
+                      width: 140,
+                      height: 140,
+                      placeholder: (context, url) =>
+                          const AnimatedUploadOverlay(),
+                      errorWidget: (context, url, error) => Image.asset(
+                        'assets/images/defaultPerson.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
           ),
         ),
-        
+        if (isUploading) const AnimatedUploadOverlay(),
+
         // Camera Button
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Container(
-            decoration: BoxDecoration(
-              color: isUploadingDisabled
-                  ? Colors.grey
-                  : Colors.yellow[700],
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.2),
-                  blurRadius: 5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(50),
-                onTap: isUploadingDisabled ? null : onSelectImage,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: Colors.white,
-                    size: 20,
+        if (!isUploadingDisabled)
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.yellow[700],
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 5,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(50),
+                  onTap: onSelectImage,
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.camera_alt,
+                      color: Colors.white,
+                      size: 20,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
       ],
     );
   }
