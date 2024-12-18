@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +7,7 @@ import 'package:robosoc/utilities/user_profile_provider.dart';
 import 'package:robosoc/widgets/onboarding_screen/onboarding_header.dart';
 import 'package:robosoc/widgets/onboarding_screen/role_selector.dart';
 import 'package:robosoc/widgets/onboarding_screen/custom_textfield.dart';
+import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -30,6 +29,57 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     'Administrator',
   ];
 
+  Future<bool> _verifyAdminEmail(String email) async {
+    try {
+      final QuerySnapshot result = await FirebaseFirestore.instance
+          .collection('admin_emails')
+          .where('email', isEqualTo: email)
+          .get();
+      
+      return result.docs.isNotEmpty;
+    } catch (e) {
+      print('Error verifying admin email: $e');
+      return false;
+    }
+  }
+
+  void _showAdminErrorDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text(
+            'Access Denied',
+            style: TextStyle(fontFamily: "NexaBold"),
+          ),
+          content: const Text(
+            'You are not registered as an administrator.',
+            style: TextStyle(fontFamily: "NexaRegular"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
+              child: const Text(
+                'OK',
+                style: TextStyle(
+                  fontFamily: "NexaBold",
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _completeOnboarding() async {
     if (_formKey.currentState!.validate() && _selectedRole.isNotEmpty) {
       setState(() => _isLoading = true);
@@ -37,6 +87,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       try {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
+          // Check if selected role is Administrator
+          if (_selectedRole == 'Administrator') {
+            // Verify if the email is in admin_emails collection
+            bool isAdmin = await _verifyAdminEmail(user.email ?? '');
+            if (!isAdmin) {
+              setState(() => _isLoading = false);
+              _showAdminErrorDialog();
+              return;
+            }
+          }
+
+          // If not administrator or verification passed, proceed with profile creation
           await FirebaseFirestore.instance
               .collection('profiles')
               .doc(user.uid)
@@ -63,7 +125,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         );
       } finally {
-        setState(() => _isLoading = false);
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
       }
     } else if (_selectedRole.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,4 +1,4 @@
-// ignore_for_file: use_super_parameters, use_build_context_synchronously
+// ignore_for_file: use_super_parameters, use_build_context_synchronously, unnecessary_import
 
 import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';

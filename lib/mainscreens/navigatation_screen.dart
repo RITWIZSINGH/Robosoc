@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/home_page.dart';
 import 'package:robosoc/mainscreens/issuehistory/issue_history.dart';
@@ -53,7 +54,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -102,6 +102,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
             case 3:
               destinationScreen = const MomForm();
               break;
+            case 2:
+            // destinationScreen = const IssueComponentScreen();
           }
 
           if (destinationScreen != null) {
@@ -126,15 +128,15 @@ class _NavigationScreenState extends State<NavigationScreen> {
         unselectedItemColor: const Color.fromARGB(255, 135, 134, 134),
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
+            icon: Icon(LucideIcons.home),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.hardware_outlined),
+            icon: Icon(LucideIcons.axe),
             label: "Projects",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.history_outlined),
+            icon: Icon(Icons.history_edu_sharp),
             label: "History",
           ),
           BottomNavigationBarItem(
