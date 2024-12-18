@@ -1,59 +1,84 @@
 import 'package:flutter/foundation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:robosoc/models/user_profile.dart';
+import 'package:robosoc/utilities/user_profile_service.dart';
 
 class UserProfileProvider with ChangeNotifier {
-  String _userName = 'User';
-  String _profileImageUrl = '';
+  final UserProfileService _profileService;
+  
+  UserProfile _profile = UserProfile.empty();
   bool _isLoading = true;
   bool _isInitialized = false;
 
-  String get userName => _userName;
-  String get profileImageUrl => _profileImageUrl;
+  UserProfileProvider({UserProfileService? profileService})
+      : _profileService = profileService ?? UserProfileService();
+
+  String get userName => _profile.name;
+  String get profileImageUrl => _profile.photoURL;
+  String get userRole => _profile.role;
+  String get userEmail => _profile.email;
   bool get isLoading => _isLoading;
+  UserProfile get profile => _profile;
 
   Future<void> loadUserProfile({bool forceRefresh = false}) async {
     if (_isInitialized && !forceRefresh) return;
 
     try {
-      _isLoading = true;
-      notifyListeners();
+      _setLoading(true);
 
-      final user = FirebaseAuth.instance.currentUser;
-      if (user != null) {
-        final docSnapshot = await FirebaseFirestore.instance
-            .collection('profiles')
-            .doc(user.uid)
-            .get();
-
-        if (docSnapshot.exists) {
-          _userName = docSnapshot.data()?['name'] ?? 'User';
-          _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
-        }
+      final profile = await _profileService.fetchUserProfile();
+      if (profile != null) {
+        _profile = profile;
       }
 
-      _isLoading = false;
       _isInitialized = true;
-      notifyListeners();
+      _setLoading(false);
     } catch (e) {
       if (kDebugMode) {
-        print('Error fetching user profile: $e');
+        print('Error in loadUserProfile: $e');
       }
-      _isLoading = false;
-      notifyListeners();
+      _setLoading(false);
     }
   }
 
-  void updateProfile(String name, String imageUrl) {
-    _userName = name;
-    _profileImageUrl = imageUrl;
-    notifyListeners();
+  Future<void> updateProfile({
+    String? name,
+    String? imageUrl,
+    String? role,
+    String? email,
+  }) async {
+    try {
+      _setLoading(true);
+
+      final updatedProfile = _profile.copyWith(
+        name: name,
+        photoURL: imageUrl,
+        role: role,
+        email: email,
+      );
+
+      await _profileService.updateUserProfile(updatedProfile);
+      _profile = updatedProfile;
+
+      _setLoading(false);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error in updateProfile: $e');
+      }
+      _setLoading(false);
+      rethrow;
+    }
   }
 
   void reset() {
     _isInitialized = false;
-    _userName = 'User';
-    _profileImageUrl = '';
-    _isLoading = true;
+    _profile = UserProfile.empty();
+    _setLoading(true);
   }
+
+  void _setLoading(bool value) {
+    _isLoading = value;
+    notifyListeners();
+  }
+
+  Stream<UserProfile?> get profileStream => _profileService.userProfileStream();
 }
