@@ -11,6 +11,28 @@ import 'package:robosoc/mainscreens/projects_screen/add_new_project_screen.dart'
 import 'package:robosoc/utilities/page_transitions.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart';
 
+// Navigation Item Model
+class NavItem {
+  final IconData icon;
+  final String label;
+
+  const NavItem({
+    required this.icon,
+    required this.label,
+  });
+}
+
+// FAB Action Model
+class FabAction {
+  final Widget screen;
+  final bool requiresAdmin;
+
+  const FabAction({
+    required this.screen,
+    this.requiresAdmin = true,
+  });
+}
+
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
 
@@ -20,8 +42,34 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   late PageController _pageController;
-  int currentIndex = 0;
-  final List<Widget> pages = [
+  int _currentIndex = 0;
+
+  // Bottom Navigation Items
+  static const List<NavItem> _navItems = [
+    NavItem(icon: LucideIcons.home, label: "Home"),
+    NavItem(icon: LucideIcons.axe, label: "Projects"),
+    NavItem(icon: Icons.history_edu_sharp, label: "History"),
+    NavItem(icon: Icons.document_scanner_outlined, label: "MOM"),
+  ];
+
+  // FAB Actions Map
+  static final Map<int, FabAction> _fabActions = {
+    0: FabAction(
+      screen: const AddNewComponentScreen(),
+      requiresAdmin: true,
+    ),
+    1: FabAction(
+      screen: const AddProjectScreen(),
+      requiresAdmin: true,
+    ),
+    3: FabAction(
+      screen: const MomForm(),
+      requiresAdmin: false,
+    ),
+  };
+
+  // Pages List
+  final List<Widget> _pages = [
     const HomePage(),
     const ProjectsScreen(),
     const IssueHistory(),
@@ -32,20 +80,18 @@ class _NavigationScreenState extends State<NavigationScreen> {
   void initState() {
     super.initState();
     _pageController = PageController(
-      initialPage: currentIndex,
+      initialPage: _currentIndex,
       viewportFraction: 1.0,
     );
 
-    // Load user profile immediately when navigating to NavigationScreen
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<UserProfileProvider>(context, listen: false)
-          .loadUserProfile(forceRefresh: true);
+      context.read<UserProfileProvider>().loadUserProfile(forceRefresh: true);
     });
   }
 
-  void changePage(int index) {
+  void _changePage(int index) {
     setState(() {
-      currentIndex = index;
+      _currentIndex = index;
       _pageController.animateToPage(
         index,
         duration: const Duration(milliseconds: 450),
@@ -54,97 +100,89 @@ class _NavigationScreenState extends State<NavigationScreen> {
     });
   }
 
+  void _navigateToScreen(BuildContext context, Widget screen) {
+    Navigator.push(
+      context,
+      SlideRightRoute(page: screen),
+    );
+  }
+
+  Widget _buildFloatingActionButton(BuildContext context, String userRole) {
+    final fabAction = _fabActions[_currentIndex];
+    
+    if (fabAction == null) return const SizedBox.shrink();
+    
+    // Only show FAB if user is admin when required or if action doesn't require admin
+    if (fabAction.requiresAdmin && userRole.toLowerCase() != 'administrator') {
+      return const SizedBox.shrink();
+    }
+
+    return FloatingActionButton(
+      elevation: 12,
+      shape: const StadiumBorder(),
+      backgroundColor: Colors.black,
+      onPressed: () => _navigateToScreen(context, fabAction.screen),
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+        size: 30,
+      ),
+    );
+  }
+
+  Widget _buildPageView() {
+    return PageView.builder(
+      controller: _pageController,
+      itemCount: _pages.length,
+      physics: const BouncingScrollPhysics(),
+      onPageChanged: (index) => setState(() => _currentIndex = index),
+      itemBuilder: (context, index) {
+        return AnimatedBuilder(
+          animation: _pageController,
+          builder: (context, child) {
+            double value = 1.0;
+            if (_pageController.position.haveDimensions) {
+              value = _pageController.page! - index;
+              value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
+            }
+            return Transform.scale(
+              scale: Curves.easeOut.transform(value),
+              child: child,
+            );
+          },
+          child: _pages[index],
+        );
+      },
+    );
+  }
+
+  Widget _buildBottomNavigationBar(BuildContext context) {
+    return BottomNavigationBar(
+      currentIndex: _currentIndex,
+      onTap: _changePage,
+      iconSize: 35,
+      selectedItemColor: Theme.of(context).colorScheme.secondary,
+      unselectedItemColor: const Color.fromARGB(255, 135, 134, 134),
+      items: _navItems.map((item) => BottomNavigationBarItem(
+        icon: Icon(item.icon),
+        label: item.label,
+      )).toList(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: PageView.builder(
-          controller: _pageController,
-          itemCount: pages.length,
-          physics: const BouncingScrollPhysics(), // Adds a bouncy effect
-          onPageChanged: (index) {
-            setState(() {
-              currentIndex = index;
-            });
-          },
-          itemBuilder: (context, index) {
-            return AnimatedBuilder(
-              animation: _pageController,
-              builder: (context, child) {
-                double value = 1.0;
-                if (_pageController.position.haveDimensions) {
-                  value = _pageController.page! - index;
-                  value = (1 - (value.abs() * 0.3)).clamp(0.0, 1.0);
-                }
-                return Transform.scale(
-                  scale: Curves.easeOut.transform(value),
-                  child: child,
-                );
-              },
-              child: pages[index],
-            );
-          },
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        elevation: 12,
-        shape: const StadiumBorder(),
-        onPressed: () {
-          Widget? destinationScreen;
-          switch (currentIndex) {
-            case 0:
-              destinationScreen = const AddNewComponentScreen();
-              break;
-            case 1:
-              destinationScreen = const AddProjectScreen();
-              break;
-            case 3:
-              destinationScreen = const MomForm();
-              break;
-            case 2:
-            // destinationScreen = const IssueComponentScreen();
-          }
-
-          if (destinationScreen != null) {
-            Navigator.push(
-              context,
-              SlideRightRoute(page: destinationScreen),
-            );
-          }
-        },
-        backgroundColor: Colors.black,
-        child: const Icon(
-          Icons.add,
-          color: Colors.white,
-          size: 30,
-        ),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: changePage,
-        iconSize: 35,
-        selectedItemColor: Theme.of(context).colorScheme.secondary,
-        unselectedItemColor: const Color.fromARGB(255, 135, 134, 134),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.home),
-            label: "Home",
+    return Consumer<UserProfileProvider>(
+      builder: (context, userProvider, child) {
+        return Scaffold(
+          body: SafeArea(
+            child: _buildPageView(),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(LucideIcons.axe),
-            label: "Projects",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history_edu_sharp),
-            label: "History",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.document_scanner_outlined),
-            label: "MOM",
-          ),
-        ],
-      ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+          floatingActionButton: _buildFloatingActionButton(context, userProvider.userRole),
+          bottomNavigationBar: _buildBottomNavigationBar(context),
+        );
+      },
     );
   }
 
