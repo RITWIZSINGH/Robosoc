@@ -67,7 +67,7 @@ class _AddNewComponentScreenState extends State<AddNewComponentScreen> {
         final imageUrl =
             await ImagePickerUtils.uploadImage(_imageFile, 'component_images');
 
-        final component = Component(
+        final component = InventoryComponent(
           id: '',
           name: _componentName,
           quantity: int.parse(_quantity),

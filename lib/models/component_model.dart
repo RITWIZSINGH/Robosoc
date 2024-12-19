@@ -1,12 +1,11 @@
-// lib/models/component_model.dart
-class Component {
+class InventoryComponent {
   String id;
   final String name;
   final int quantity;
   final String description;
   final String imageUrl;
 
-  Component({
+  InventoryComponent({
     required this.id,
     required this.name,
     required this.quantity,
@@ -14,8 +13,8 @@ class Component {
     this.imageUrl = '',
   });
 
-  factory Component.fromMap(Map map, String id) {
-    return Component(
+  factory InventoryComponent.fromMap(Map<String, dynamic> map, String id) {
+    return InventoryComponent(
       id: id,
       name: map['name'] ?? '',
       quantity: map['quantity'] ?? 0,
@@ -31,5 +30,21 @@ class Component {
       'description': description,
       'imageUrl': imageUrl,
     };
+  }
+
+  InventoryComponent copyWith({
+    String? id,
+    String? name,
+    int? quantity,
+    String? description,
+    String? imageUrl,
+  }) {
+    return InventoryComponent(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      quantity: quantity ?? this.quantity,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+    );
   }
 }

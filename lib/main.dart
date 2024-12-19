@@ -9,6 +9,7 @@ import 'package:robosoc/mainscreens/startscreen/start_screen.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:robosoc/utilities/notification_provider.dart';
 import 'package:robosoc/utilities/project_provider.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart';
 
@@ -56,6 +57,9 @@ class RobosocApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => ComponentProvider()),
         ChangeNotifierProvider(create: (context) => ProjectProvider()),
         ChangeNotifierProvider(create: (context) => UserProfileProvider()),
+        
+        ChangeNotifierProvider(create: (context) => NotificationProvider()),
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

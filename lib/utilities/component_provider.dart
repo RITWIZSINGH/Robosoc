@@ -5,16 +5,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:robosoc/models/component_model.dart';
 
 class ComponentProvider with ChangeNotifier {
-  List<Component> _components = [];
+  List<InventoryComponent> _components = [];
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  List<Component> get components => _components;
+  List<InventoryComponent> get components => _components;
 
   Future<void> loadComponents() async {
     try {
       QuerySnapshot querySnapshot = await _firestore.collection('components').get();
       _components = querySnapshot.docs
-          .map((doc) => Component.fromMap(doc.data() as Map<String, dynamic>, doc.id))
+          .map((doc) => InventoryComponent.fromMap(doc.data() as Map<String, dynamic>, doc.id))
           .toList();
       notifyListeners();
     } catch (e) {
@@ -22,10 +22,10 @@ class ComponentProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addComponent(Component component) async {
+  Future<void> addComponent(InventoryComponent component) async {
     try {
       DocumentReference docRef = await _firestore.collection('components').add(component.toMap());
-      component = Component(
+      component = InventoryComponent(
         id: docRef.id,
         name: component.name,
         quantity: component.quantity,
@@ -52,7 +52,7 @@ class ComponentProvider with ChangeNotifier {
             .update({'quantity': newQuantity});
 
         // Update in local list
-        _components[index] = Component(
+        _components[index] = InventoryComponent(
           id: componentId,
           name: _components[index].name,
           quantity: newQuantity,
@@ -67,7 +67,7 @@ class ComponentProvider with ChangeNotifier {
     }
   }
 
-  List<Component> searchComponents(String query) {
+  List<InventoryComponent> searchComponents(String query) {
     return _components.where((component) => 
       component.name.toLowerCase().contains(query.toLowerCase())
     ).toList();

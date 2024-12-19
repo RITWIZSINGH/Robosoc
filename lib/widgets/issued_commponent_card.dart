@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:robosoc/models/component.dart';
 
@@ -19,7 +20,7 @@ class IssuedCommponentCard extends StatelessWidget {
                   height: 40,
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(100)),
-                  child: component.image),
+                  child: CachedNetworkImage(imageUrl: component.imageUrl)),
               const SizedBox(
                 width: 20,
               ),

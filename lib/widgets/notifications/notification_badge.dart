@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:robosoc/mainscreens/homescreen/notification_screen.dart';
+import 'package:robosoc/utilities/page_transitions.dart';
 import '../../utilities/notification_provider.dart';
 
 class NotificationBadge extends StatelessWidget {
@@ -19,7 +21,7 @@ class NotificationBadge extends StatelessWidget {
               icon: const Icon(Icons.notifications),
               onPressed: () {
                 // Open notifications screen
-                Navigator.pushNamed(context, '/notifications');
+                Navigator.push(context, SlideRightRoute(page: NotificationsScreen()));
               },
             ),
             if (unreadCount > 0)

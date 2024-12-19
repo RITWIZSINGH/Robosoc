@@ -6,7 +6,7 @@ import 'package:robosoc/models/component_model.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 
 class ComponentDetailScreen extends StatefulWidget {
-  final Component component;
+  final InventoryComponent component;
 
   const ComponentDetailScreen({Key? key, required this.component})
       : super(key: key);

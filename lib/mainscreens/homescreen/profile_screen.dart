@@ -9,7 +9,8 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:robosoc/mainscreens/login_registerscreen/login_screen.dart';
 import 'package:robosoc/models/component.dart';
 import 'package:robosoc/utilities/image_picker.dart';
-import 'package:robosoc/widgets/issued_commponent_card.dart';
+import 'package:robosoc/widgets/notifications/notification_badge.dart';
+import 'package:robosoc/widgets/profile/issued_component_history_card.dart';
 import 'package:robosoc/widgets/profile/profile_form.dart';
 import 'package:robosoc/widgets/profile/profile_image.dart';
 import 'package:robosoc/utilities/role_manager.dart';
@@ -65,7 +66,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _userRole = docSnapshot.data()?['role'] ?? '';
             _profileImageUrl = docSnapshot.data()?['photoURL'] ?? '';
 
-            // Initialize controllers and selected role for editing
             _nameController.text = _userName;
             _selectedRole = _userRole;
           });
@@ -92,6 +92,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
             return Component(
               name: doc['name'],
               quantity: doc['quantity'],
+              issueDate: doc['issueDate'],
+              returnDate: doc['returnDate'],
+              approvedBy: doc['approvedBy'],
+              imageUrl: doc['imageUrl'],
             );
           }).toList();
         });
@@ -135,12 +139,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       final user = _auth.currentUser;
       if (user != null && _image != null) {
-        // Delete the old image first
         if (_profileImageUrl.isNotEmpty) {
           await _deleteOldProfileImage();
         }
 
-        // Upload new image
         final storageRef =
             _storage.ref().child('profileImages').child('${user.uid}.jpg');
 
@@ -181,8 +183,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
-                  content:
-                      Text('You are not authorized to become an administrator'),
+                  content: Text('You are not authorized to become an administrator'),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -243,7 +244,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : SingleChildScrollView(
                 child: Column(
                   children: [
-                    // App Bar
                     Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 16, vertical: 10),
@@ -267,9 +267,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             children: [
                               IconButton(
                                 icon: Icon(
-                                    _isEditing ? Icons.close : Icons.edit,
-                                    color:
-                                        _isEditing ? Colors.red : Colors.black),
+                                  _isEditing ? Icons.close : Icons.edit,
+                                  color: _isEditing ? Colors.red : Colors.black
+                                ),
                                 onPressed: () {
                                   setState(() {
                                     _isEditing = !_isEditing;
@@ -280,9 +280,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   });
                                 },
                               ),
+                              const NotificationBadge(),
                               IconButton(
-                                icon:
-                                    const Icon(Icons.logout, color: Colors.red),
+                                icon: const Icon(Icons.logout, color: Colors.red),
                                 onPressed: _logout,
                               ),
                             ],
@@ -291,7 +291,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
 
-                    // Profile Header
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: Column(
@@ -335,9 +334,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
 
-                    // Issued Components Section
                     _isEditing
-                        ? SizedBox()
+                        ? const SizedBox()
                         : Padding(
                             padding: const EdgeInsets.only(
                                 left: 16, bottom: 38, top: 20, right: 16),
@@ -360,8 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ],
                                   )
                                 : Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Issued Components',
@@ -375,10 +372,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ...List.generate(
                                         _issuedComponents.length,
                                         (index) => Padding(
-                                          padding:
-                                              const EdgeInsets.only(bottom: 10),
-                                          child: IssuedCommponentCard(
+                                          padding: const EdgeInsets.only(bottom: 10),
+                                          child: IssuedComponentHistoryCard(
                                             component: _issuedComponents[index],
+                                            issueDate: _issuedComponents[index].issueDate,
+                                            returnDate: _issuedComponents[index].returnDate,
+                                            approvedBy: _issuedComponents[index].approvedBy,
+                                            imageUrl: _issuedComponents[index].imageUrl,
+                                            quantity: _issuedComponents[index].quantity,
                                           ),
                                         ),
                                       )

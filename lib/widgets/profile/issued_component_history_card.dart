@@ -4,8 +4,8 @@ import '../../models/component.dart';
 
 class IssuedComponentHistoryCard extends StatelessWidget {
   final Component component;
-  final String issueDate;
-  final String? returnDate;
+  final DateTime? issueDate;
+  final DateTime? returnDate;
   final String approvedBy;
   final String imageUrl;
   final int quantity;
@@ -72,13 +72,13 @@ class IssuedComponentHistoryCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Issued: ${DateFormat('MMM dd, yyyy').format(DateTime.parse(issueDate))}',
+                    'Issued: ${DateFormat('MMM dd, yyyy')}',
                     style: const TextStyle(fontSize: 14),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     returnDate != null
-                        ? 'Returned: ${DateFormat('MMM dd, yyyy').format(DateTime.parse(returnDate!))}'
+                        ? 'Returned: ${DateFormat('MMM dd, yyyy')}'
                         : 'Status: Still Issued',
                     style: TextStyle(
                       fontSize: 14,
