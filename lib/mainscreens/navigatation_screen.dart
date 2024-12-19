@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:provider/provider.dart';
 import 'package:robosoc/mainscreens/homescreen/home_page.dart';
+import 'package:robosoc/mainscreens/issuehistory/issue_component_screen.dart';
 import 'package:robosoc/mainscreens/issuehistory/issue_history.dart';
 import 'package:robosoc/mainscreens/momscreen/mom_page.dart';
 import 'package:robosoc/mainscreens/projects_screen/projects_page.dart';
@@ -64,6 +65,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
     ),
     3: FabAction(
       screen: const MomForm(),
+      requiresAdmin: false,
+    ),
+     2: FabAction(
+      screen: const IssueComponentScreen(),
       requiresAdmin: false,
     ),
   };

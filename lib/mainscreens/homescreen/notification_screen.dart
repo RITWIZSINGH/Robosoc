@@ -3,34 +3,136 @@ import 'package:provider/provider.dart';
 import 'package:robosoc/models/notification_model.dart';
 import 'package:robosoc/utilities/notification_provider.dart';
 
-class NotificationsScreen extends StatelessWidget {
+class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationsScreen> createState() => _NotificationsScreenState();
+}
+
+class _NotificationsScreenState extends State<NotificationsScreen> {
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadNotifications();
+  }
+
+  Future<void> _loadNotifications() async {
+    try {
+      setState(() {
+        _isLoading = true;
+        _error = null;
+      });
+
+      await Provider.of<NotificationProvider>(context, listen: false)
+          .loadNotifications();
+    } catch (e) {
+      setState(() {
+        _error = 'Failed to load notifications: $e';
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadNotifications,
+          ),
+        ],
       ),
-      body: Consumer<NotificationProvider>(
-        builder: (context, notificationProvider, _) {
-          final notifications = notificationProvider.notifications;
+      body: RefreshIndicator(
+        onRefresh: _loadNotifications,
+        child: Consumer<NotificationProvider>(
+          builder: (context, provider, _) {
+            if (_isLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            
+            if (_error != null) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _error!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: _loadNotifications,
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              );
+            }
 
-          if (notifications.isEmpty) {
-            return const Center(
-              child: Text('No notifications'),
-            );
-          }
+            // Show indexing progress banner if needed
+            if (provider.indexingInProgress) {
+              return Stack(
+                children: [
+                  if (provider.notifications.isNotEmpty)
+                    _buildNotificationsList(provider.notifications),
+                  SafeArea(
+                    child: Material(
+                      child: Container(
+                        color: Colors.yellow[100],
+                        padding: const EdgeInsets.all(8),
+                        child: const Text(
+                          'Setting up notifications... This may take a few minutes. '
+                          'Some notifications might appear out of order temporarily.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.black87),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
 
-          return ListView.builder(
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              final notification = notifications[index];
-              return NotificationTile(notification: notification);
-            },
-          );
-        },
+            if (provider.notifications.isEmpty) {
+              return Stack(
+                children: [
+                  const Center(
+                    child: Text('No notifications'),
+                  ),
+                  ListView(), // Required for RefreshIndicator to work with empty content
+                ],
+              );
+            }
+
+            return _buildNotificationsList(provider.notifications);
+          },
+        ),
       ),
+    );
+  }
+
+  Widget _buildNotificationsList(List<NotificationModel> notifications) {
+    return ListView.separated(
+      itemCount: notifications.length,
+      separatorBuilder: (context, index) => const Divider(height: 1),
+      itemBuilder: (context, index) {
+        final notification = notifications[index];
+        return NotificationTile(
+          key: ValueKey(notification.id),
+          notification: notification,
+        );
+      },
     );
   }
 }
@@ -45,28 +147,50 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        _getNotificationIcon(notification.type),
-        color: notification.isRead ? Colors.grey : Colors.blue,
-      ),
-      title: Text(
-        notification.title,
-        style: TextStyle(
-          fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+    return Container(
+      color: notification.isRead ? null : Colors.blue.withOpacity(0.1),
+      child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        leading: Icon(
+          _getNotificationIcon(notification.type),
+          color: notification.isRead ? Colors.grey : Colors.blue,
+          size: 28,
         ),
+        title: Text(
+          notification.title,
+          style: TextStyle(
+            fontWeight: notification.isRead ? FontWeight.normal : FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Text(
+              notification.message,
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _formatDate(notification.createdAt),
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
+        onTap: () {
+          if (!notification.isRead) {
+            Provider.of<NotificationProvider>(context, listen: false)
+                .markAsRead(notification.id);
+          }
+        },
       ),
-      subtitle: Text(notification.message),
-      trailing: Text(
-        _formatDate(notification.createdAt),
-        style: const TextStyle(fontSize: 12),
-      ),
-      onTap: () {
-        if (!notification.isRead) {
-          Provider.of<NotificationProvider>(context, listen: false)
-              .markAsRead(notification.id);
-        }
-      },
     );
   }
 
@@ -89,7 +213,8 @@ class NotificationTile extends StatelessWidget {
 
     if (difference.inDays == 0) {
       if (difference.inHours == 0) {
-        return '${difference.inMinutes}m ago';
+        final minutes = difference.inMinutes;
+        return minutes <= 0 ? 'Just now' : '$minutes min ago';
       }
       return '${difference.inHours}h ago';
     } else if (difference.inDays < 7) {

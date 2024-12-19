@@ -4,10 +4,10 @@ class NotificationModel {
   final String id;
   final String title;
   final String message;
-  final String type; // 'issue_request', 'return_request', 'approval'
+  final String type;
   final String componentId;
   final String userId;
-  final String? approvedBy;
+  final String requestId;  // Added this field
   final DateTime createdAt;
   final bool isRead;
 
@@ -18,7 +18,7 @@ class NotificationModel {
     required this.type,
     required this.componentId,
     required this.userId,
-    this.approvedBy,
+    required this.requestId,  // Added to constructor
     required this.createdAt,
     this.isRead = false,
   });
@@ -31,7 +31,7 @@ class NotificationModel {
       type: map['type'] ?? '',
       componentId: map['componentId'] ?? '',
       userId: map['userId'] ?? '',
-      approvedBy: map['approvedBy'],
+      requestId: map['requestId'] ?? '',  // Added this field
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       isRead: map['isRead'] ?? false,
     );
@@ -44,9 +44,33 @@ class NotificationModel {
       'type': type,
       'componentId': componentId,
       'userId': userId,
-      'approvedBy': approvedBy,
+      'requestId': requestId,  // Added this field
       'createdAt': Timestamp.fromDate(createdAt),
       'isRead': isRead,
     };
+  }
+
+  NotificationModel copyWith({
+    String? id,
+    String? title,
+    String? message,
+    String? type,
+    String? componentId,
+    String? userId,
+    String? requestId,
+    DateTime? createdAt,
+    bool? isRead,
+  }) {
+    return NotificationModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      message: message ?? this.message,
+      type: type ?? this.type,
+      componentId: componentId ?? this.componentId,
+      userId: userId ?? this.userId,
+      requestId: requestId ?? this.requestId,
+      createdAt: createdAt ?? this.createdAt,
+      isRead: isRead ?? this.isRead,
+    );
   }
 }
