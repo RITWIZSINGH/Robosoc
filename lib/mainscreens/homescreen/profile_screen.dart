@@ -336,51 +336,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
 
                     // Issued Components Section
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          left: 16, bottom: 38, top: 20, right: 16),
-                      child: _issuedComponents.isEmpty
-                          ? Column(
-                              children: const [
-                                Icon(
-                                  LucideIcons.cpu,
-                                  size: 30,
-                                  color: Colors.blueGrey,
-                                ),
-                                Text(
-                                  'No Components Issued Yet',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 18,
-                                    fontFamily: 'NexaRegular',
+                    _isEditing
+                        ? SizedBox()
+                        : Padding(
+                            padding: const EdgeInsets.only(
+                                left: 16, bottom: 38, top: 20, right: 16),
+                            child: _issuedComponents.isEmpty
+                                ? Column(
+                                    children: const [
+                                      Icon(
+                                        LucideIcons.cpu,
+                                        size: 30,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      Text(
+                                        'No Components Issued Yet',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                          fontSize: 18,
+                                          fontFamily: 'NexaRegular',
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Text(
+                                        'Issued Components',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'NexaBold',
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      ...List.generate(
+                                        _issuedComponents.length,
+                                        (index) => Padding(
+                                          padding:
+                                              const EdgeInsets.only(bottom: 10),
+                                          child: IssuedCommponentCard(
+                                            component: _issuedComponents[index],
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
-                                ),
-                              ],
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Issued Components',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: 'NexaBold',
-                                  ),
-                                ),
-                                const SizedBox(height: 10),
-                                ...List.generate(
-                                  _issuedComponents.length,
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 10),
-                                    child: IssuedCommponentCard(
-                                      component: _issuedComponents[index],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
-                    ),
+                          ),
                   ],
                 ),
               ),

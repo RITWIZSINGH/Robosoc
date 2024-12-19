@@ -15,7 +15,7 @@ class ProjectListItem extends StatelessWidget {
 
   // Extract color logic to a separate method for better readability
   Color _getBorderColor() {
-    return project.status == 'completed' ? Colors.green : Colors.amber;
+    return project.status == 'completed' ? Color(0xff2ed12e) : Colors.amber;
   }
 
   @override

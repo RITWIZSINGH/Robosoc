@@ -52,8 +52,10 @@ class _ProfileFormState extends State<ProfileForm> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: TextFormField(
               controller: _nameController,
+              maxLength: 20,
               decoration: InputDecoration(
                 labelText: 'Name',
+                
                 labelStyle: const TextStyle(fontFamily: 'NexaBold'),
                 filled: true,
                 fillColor: Colors.grey.shade100,
