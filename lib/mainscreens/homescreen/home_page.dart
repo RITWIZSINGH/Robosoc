@@ -9,7 +9,7 @@ import 'package:robosoc/utilities/role_manager.dart';
 import 'package:robosoc/utilities/user_profile_provider.dart';
 import 'package:robosoc/utilities/component_provider.dart';
 import 'package:robosoc/widgets/animated_profile_image.dart';
-import 'package:robosoc/widgets/animated_upload_overlay.dart';
+import 'package:robosoc/widgets/profile/animated_upload_overlay.dart';
 import 'package:robosoc/widgets/loading_states.dart';
 import 'package:robosoc/mainscreens/homescreen/component_detail_screen.dart';
 

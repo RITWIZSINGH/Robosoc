@@ -1,23 +1,23 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:robosoc/widgets/animated_upload_overlay.dart';
+import 'package:robosoc/widgets/profile/animated_upload_overlay.dart';
 
 class ProfileImage extends StatelessWidget {
   final String profileImageUrl;
-  final Uint8List? selectedImage;
+  final dynamic selectedImage;
   final bool isUploading;
   final VoidCallback onSelectImage;
   final bool isUploadingDisabled;
 
   const ProfileImage({
-    Key? key,
+    super.key,
     required this.profileImageUrl,
-    required this.selectedImage,
+    this.selectedImage,
     required this.isUploading,
     required this.onSelectImage,
     required this.isUploadingDisabled,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -39,32 +39,28 @@ class ProfileImage extends StatelessWidget {
           child: ClipOval(
             child: selectedImage != null
                 ? Image.memory(
-                    selectedImage!,
+                    selectedImage,
                     fit: BoxFit.cover,
                     width: 140,
                     height: 140,
                   )
-                : Center(
-                    child: CachedNetworkImage(
-                      imageUrl: profileImageUrl.isNotEmpty
-                          ? profileImageUrl
-                          : 'assets/images/defaultPerson.png',
+                : CachedNetworkImage(
+                    imageUrl: profileImageUrl.isNotEmpty
+                        ? profileImageUrl
+                        : 'assets/images/defaultPerson.png',
+                    fit: BoxFit.cover,
+                    width: 140,
+                    height: 140,
+                    placeholder: (context, url) => const AnimatedUploadOverlay(),
+                    errorWidget: (context, url, error) => Image.asset(
+                      'assets/images/defaultPerson.png',
                       fit: BoxFit.cover,
-                      width: 140,
-                      height: 140,
-                      placeholder: (context, url) =>
-                          const AnimatedUploadOverlay(),
-                      errorWidget: (context, url, error) => Image.asset(
-                        'assets/images/defaultPerson.png',
-                        fit: BoxFit.cover,
-                      ),
                     ),
                   ),
           ),
         ),
         if (isUploading) const AnimatedUploadOverlay(),
-
-        // Camera Button
+        
         if (!isUploadingDisabled)
           Positioned(
             bottom: 0,
