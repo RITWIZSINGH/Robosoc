@@ -13,12 +13,40 @@ Robosoc is a Flutter-based application designed for the members of Robotics Soci
 
 Here’s a preview of the application:
 
-![Login Page](assets/screenshots/login_page.jpg)
-![Register Page](assets/screenshots/register_page.jpg)
-![Forgot Password Page](assets/screenshots/forgotPassword_page.jpg)
-![Home Page](assets/screenshots/home_page.jpg)
-![Projects Page](assets/screenshots/projects_page.jpg)
-![MOMs Page](assets/screenshots/mom_page.jpg)
+<table>
+  <tr>
+    <td>
+      <img src="assets/screenshots/login_page.jpg" width="150"><br>
+      <p>Login Page</p>
+    </td>
+    <td>
+      <img src="assets/screenshots/register_page.jpg" width="150"><br>
+      <p>Register Page</p>
+    </td>
+     <td>
+      <img src="assets/screenshots/forgotPassword_page.jpg" width="150"><br>
+      <p>Forgot Password Page</p>
+    </td>
+  </tr>
+  <tr style="height: 20px;">
+    <td colspan="2"></td>
+  </tr>
+  <tr>
+    <td>
+      <img src="assets/screenshots/home_page.jpg" width="150"><br>
+      <p>Home Page</p>
+    </td>
+    <td>
+      <img src="assets/screenshots/projects_page.jpg" width="150"><br>
+      <p>Projects Page</p>
+    </td>
+     <td>
+      <img src="assets/screenshots/mom_page.jpg" width="150"><br>
+      <p>[MOMs Page</p>
+    </td>
+  </tr>
+</table>
+
 
 
 ## Getting Started
